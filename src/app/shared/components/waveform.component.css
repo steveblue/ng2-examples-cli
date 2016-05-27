@@ -1,0 +1,12 @@
+:host {
+  position: fixed;
+  bottom: 0;
+  left: 0; }
+
+.control__group {
+  -webkit-transform: translate3d(20px, 0px, 1px);
+          transform: translate3d(20px, 0px, 1px); }
+
+text {
+  font-size: 10px;
+  font-weight: 300; }

@@ -1,0 +1,48 @@
+:host {
+  position: absolute;
+  display: block;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.scene {
+  display: none;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+  &.visible {
+    display: block;
+  }
+}
+
+.copy {
+  padding-top: 120px;
+  padding-left: 30px;
+  z-index: 1000;
+  &.hidden {
+    display: none;
+  }
+}
+
+
+@media only screen 
+and (min-device-width : 375px) 
+and (max-device-width : 667px) { 
+  .button {
+    transform: translateX(30px) translateY(40px);
+  }
+}
+
+@media only screen 
+and (min-device-width :668px) { 
+  .button {
+    transform: translateX(60px) translateY(80px);
+  }
+}

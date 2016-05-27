@@ -14,9 +14,4 @@ describe('App: Synth', () => {
       inject([SynthAppComponent], (app: SynthAppComponent) => {
     expect(app).toBeTruthy();
   }));
-
-  it('should have as title \'synth works!\'',
-      inject([SynthAppComponent], (app: SynthAppComponent) => {
-    expect(app.title).toEqual('synth works!');
-  }));
 });
