@@ -14,7 +14,7 @@ These custom input sliders are configurable to display vertical, horizontal, or 
 
 This service currently relies on Firebase for signaling, so bring your own server (free). If there is interest in other signaling servers, drop me a line in the issues or submit a pull request.
 
-If you include a `conf.ts` in `app/src` that looks like the following:
+If you include a `conf.ts` in `src/app/shared` that looks like the following:
 
 ```
 var config = {
@@ -35,9 +35,9 @@ This example uses WebAudio API and d3 to visualize the levels of audio provided 
 
 ![](/public/assets/screenshot/audio.png)
 
-Bring your own audio files. Put web compliant mp3 or m4a in the /app/assets folder.
+Bring your own audio files. Put web compliant mp3 or m4a in the /public/assets folder.
 
-Configure the player with a JSON file stored in /src/models/media.json. An example is provided.
+Configure the player with a JSON file stored in /src/app/shared/models/media.json. An example is provided.
 
 ```
 {
