@@ -14,7 +14,7 @@ module.exports = function(defaults) {
       sourceDir: sourceDir,
       sassCompiler: {
         includePaths: [
-          'public/style'
+          'src/style'
         ]
       },
       vendorNpmFiles: [
@@ -29,9 +29,9 @@ module.exports = function(defaults) {
         'three/build/three.js'
       ]
     });
-    let styles = mergeTrees(_.map(glob.sync('public/**/*.scss'), function(sassFile) {
-        sassFile = sassFile.replace('public/', '');
-        return compileSass(['public'], sassFile, sassFile.replace(/.scss$/, '.css'));
+    let styles = mergeTrees(_.map(glob.sync('src/**/*.scss'), function(sassFile) {
+        sassFile = sassFile.replace('src/', '');
+        return compileSass(['src'], sassFile, sassFile.replace(/.scss$/, '.css'));
     }));
     return mergeTrees([styles, app], { overwrite: true });
 };
