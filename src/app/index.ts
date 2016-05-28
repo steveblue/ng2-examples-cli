@@ -1,2 +1,2 @@
-export {environment} from './environment';
-export {SynthAppComponent} from './synth.component';
+export { environment } from './environment';
+export { AppComponent } from './app.component';

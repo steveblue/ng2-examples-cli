@@ -29,5 +29,5 @@ testem.log
 .DS_Store
 
 
-/src/app/shared/conf.ts
+conf.ts
 /public/assets/music
