@@ -19,7 +19,8 @@
     }
   },
   "defaults": {
-    "prefix": "app",
-    "sourceDir": "src"
+    "prefix": "",
+    "sourceDir": "src",
+    "styleExt": "scss"
   }
 }
