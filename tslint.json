@@ -12,6 +12,7 @@
       true,
       "spaces"
     ],
+    "experimentalDecorators": true,
     "eofline": true,
     "no-duplicate-variable": true,
     "no-eval": true,

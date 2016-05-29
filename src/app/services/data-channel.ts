@@ -259,13 +259,14 @@ export class DataChannel {
   
 
   onDataChannelMessage(ev) {
-    
+     console.log(ev);
     this.store.messages.push({
       id: this.count++,
       data: JSON.parse(ev.data),
       sender: this.remotePeer,
       createdAt: new Date()
     });
+   
     this.channelObserver.next(this.store.messages);
     if(this.debug) console.log('Received Message: ' + ev.data);
 
@@ -279,6 +280,8 @@ export class DataChannel {
       sender: ev.sender,
       createdAt: new Date()
     });
+    
+    console.log(JSON.parse(ev.data));
   
     this.channelObserver.next(this.store.messages);
     if(this.debug) console.log('Received Message: ' + ev.data);
@@ -290,7 +293,7 @@ export class DataChannel {
     var msg = snapshot.val();
     var sender = msg.sender;
     var type = msg.type;
-
+    console.log(msg);
     if( sender === this.remotePeer ) {
       if(this.debug) console.log('Received a \'' + type + '\' signal from ' + sender + ' of type ' + type);
       if(type == 'message') {
@@ -321,6 +324,8 @@ export class DataChannel {
        sender: this.id,
        data: data
      }
+     
+     console.log(msg);
      
      if(this.debug) console.log('Sending WebSocket message from: '+msg.sender+ ' to: '+this.remotePeer);
      this.db.child('messages').child(this.remotePeer).push(msg);

@@ -6,16 +6,7 @@ declare let module: any;
 @Component({
   selector: 'slider',
   moduleId: module.id,
-  template: `
-  <div class="ui--slider" 
-       [ngClass]="{'is--hor' : options.orient === 'is--hor', 'is--vert' : options.orient === 'is--vert', 'is--joystick' : options.orient === 'is--joystick'}">
-    <div class="ui--slider-container" [uiDraggable]="options">
-      <div class="ui--slider-range" >
-        <div class="ui--slider-handle" [ngStyle]="{ transform: transform }" ></div>
-      </div>
-    </div>
-  </div>
-  `,
+  templateUrl: 'slider.component.html',
   styleUrls: ['slider.component.css'],
   directives: [DraggableDirective]
 })
@@ -30,11 +21,11 @@ export class SliderComponent implements OnInit{
   
  @Input('options') options: any; 
   
-  constructor(ref: ChangeDetectorRef, el: ElementRef) {
+  constructor(ref: ChangeDetectorRef, _el: ElementRef) {
     
 
     this.ref = ref;
-    this.elem = el.nativeElement;
+    this.elem = _el.nativeElement;
     this.transform = 'translate3d(0px, 0px, 1px)';
     
   }

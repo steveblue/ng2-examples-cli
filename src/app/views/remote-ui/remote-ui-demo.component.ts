@@ -147,7 +147,7 @@ export class RemoteUIDemo implements OnInit {
           this.client.observer.subscribe((res)=>{
          
             let msg = res[res.length-1].data; 
-            
+            console.log(msg);
             this.updateMessages(msg);
             
           });

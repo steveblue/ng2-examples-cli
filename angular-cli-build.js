@@ -23,8 +23,11 @@ module.exports = function(defaults) {
         'zone.js/dist/*.js',
         'es6-shim/es6-shim.js',
         'reflect-metadata/*.js',
+        'reflect-metadata/*.js.map',
         'rxjs/**/*.js',
         '@angular/**/*.js',
+        'rxjs/**/*.js.map',
+        '@angular/**/*.js.map',
         'd3/d3.js',
         'three/build/three.js'
       ]

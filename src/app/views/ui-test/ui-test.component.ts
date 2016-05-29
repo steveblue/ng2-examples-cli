@@ -1,5 +1,6 @@
 import config from '../../conf';
-import { Component, OnInit, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ElementRef, ChangeDetectorRef} from '@angular/core';
+import { ButtonComponent } from '../../components/button/button.component'
 import { SliderComponent } from '../../components/slider/slider.component';
 import { DataChannel } from '../../services/data-channel';
 
@@ -10,32 +11,42 @@ declare let module: any;
   moduleId: module.id,
   template: `
   
-    <p class="button" (click)="onClick($event)" [ngClass]="{ 'is--disabled' : isConnected }">
+    <ui-button [options]="buttonOptions">
       <span *ngIf="!isConnected"> Connect </span>
       <span *ngIf="isConnected"> Connected </span>
-    </p>
-  
+    </ui-button>
+
     <slider [options]="joyOptions.left"></slider>
-    <slider [options]="slider"></slider>
+    <slider [options]="sliderOptions"></slider>
     <slider [options]="joyOptions.right"></slider>
   `,
-  directives: [ SliderComponent ],
+  directives: [ SliderComponent, ButtonComponent ],
   styleUrls: ['ui-test.component.css']
 })
 
 export class UIComponentTest implements OnInit {
   
-  slider: any;
+  sliderOptions: any;
   joyOptions: any;
+  buttonOptions: any;
   client: any;
   isConnected: boolean;
   elem: any;
+  ref: any;
   
-  constructor(private _el: ElementRef) {
+  constructor(private _el: ElementRef, private _ref: ChangeDetectorRef) {
     
     this.elem = _el.nativeElement;
+    this.ref = _ref;
 
     this.isConnected = false;
+    
+    this.buttonOptions = {
+        position: 'absolute',
+        x: (30) + 'px',
+        y: window.innerHeight - 280 + 'px',
+        onClick: this.onClick.bind(this)
+    };
     
     this.joyOptions = {
       left: {
@@ -60,7 +71,7 @@ export class UIComponentTest implements OnInit {
       }
     };
     
-    this.slider = {
+    this.sliderOptions = {
         orient: 'is--vert',
         min: 0.0,
         max: 1.0,
@@ -76,6 +87,10 @@ export class UIComponentTest implements OnInit {
     
   }
   ngOnInit() {
+    
+    // this.client is undefined!
+    
+    
      this.joyOptions.left.onUpdate.subscribe((val) => {
       let msg = JSON.stringify({
         currentValue: this.joyOptions.left.currentValue,
@@ -83,7 +98,7 @@ export class UIComponentTest implements OnInit {
         min: this.joyOptions.left.min,
         control: 'joyLeft'
       });
-     if(this.client.channel) {
+      if(this.client && this.client.channel) {
          this.client.channel.send(msg);
       }
      });
@@ -94,31 +109,33 @@ export class UIComponentTest implements OnInit {
         min: this.joyOptions.right.min,
         control: 'joyRight'
       });
-      if(this.client.channel) {
+
+      if(this.client && this.client.channel) {
          this.client.channel.send(msg);
       }
 
      });
-     this.slider.onUpdate.subscribe((val) => {
+     this.sliderOptions.onUpdate.subscribe((val) => {
       let msg = JSON.stringify({
-        currentValue: this.slider.currentValue,
-        max: this.slider.max,
-        min: this.slider.min,
+        currentValue: this.sliderOptions.currentValue,
+        max: this.sliderOptions.max,
+        min: this.sliderOptions.min,
         control: 'slider'
       });
-      if(this.client.channel) {
+      if(this.client && this.client.channel) {
          this.client.channel.send(msg);
       }
      });
   }
   onClick() {
-
+ 
     if(!this.isConnected) {
 
       this.client = new DataChannel(config.room, config.username, config.server);
-
+        
       this.client.emitter.subscribe((message)=>{
-
+        console.log('hello!', message);
+           
         if(message === 'open') {
           this.isConnected = true;
           this.client.observer.subscribe((res)=>{
@@ -126,12 +143,14 @@ export class UIComponentTest implements OnInit {
             console.log(res);
             
           });
+          
+          this.ref.detectChanges();
+  
         }
 
       });
 
     }
-
   }
   
 }
