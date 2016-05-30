@@ -1,6 +1,7 @@
 import config from '../../conf';
 import { Component, OnInit, EventEmitter, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { ButtonComponent } from '../../components/button/button.component';
+import { ToggleComponent } from '../../components/toggle/toggle.component';
 import { SliderComponent } from '../../components/slider/slider.component';
 import { DataChannel } from '../../services/data-channel';
 
@@ -11,17 +12,24 @@ declare let module: any;
   moduleId: module.id,
   template: `
   
-    <ui-button [options]="buttonOptions">
+    <ui-button [options]="buttonOptions" 
+               (click)="onClick($event)">
       <span *ngIf="!isConnected"> Connect </span>
       <span *ngIf="isConnected"> Connected </span>
       <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
     </ui-button>
+    
+    <ui-toggle [options]="toggleOptions" 
+               (click)="onToggle($event)">
+      <span *ngIf="!toggleOptions.isActive"> Invert </span>
+      <span *ngIf="toggleOptions.isActive"> Default </span>
+    </ui-toggle>
 
     <slider [options]="joyOptions.left"></slider>
     <slider [options]="sliderOptions"></slider>
     <slider [options]="joyOptions.right"></slider>
   `,
-  directives: [ SliderComponent, ButtonComponent ],
+  directives: [ SliderComponent, ButtonComponent, ToggleComponent ],
   styleUrls: ['ui-test.component.css']
 })
 
@@ -30,9 +38,11 @@ export class UIComponentTest implements OnInit {
   sliderOptions: any;
   joyOptions: any;
   buttonOptions: any;
+  toggleOptions: any;
   client: any;
   isConnected: boolean;
   isConnecting: boolean;
+  isInverted: boolean;
   elem: any;
   ref: any;
   
@@ -47,9 +57,16 @@ export class UIComponentTest implements OnInit {
     this.buttonOptions = {
         position: 'absolute',
         x: (30) + 'px',
-        y: window.innerHeight - 280 + 'px',
-        onClick: this.onClick.bind(this)
+        y: window.innerHeight - 280 + 'px'
     };
+    
+    this.toggleOptions = {
+        isActive: false,
+        position: 'absolute',
+        x: (200) + 'px',
+        y: window.innerHeight - 280 + 'px'
+    };
+    
     
     this.joyOptions = {
       left: {
@@ -156,6 +173,20 @@ export class UIComponentTest implements OnInit {
       });
 
     }
+  }
+  
+  onToggle() {
+    this.toggleOptions.isActive = !this.toggleOptions.isActive ? true : false;
+    
+    let msg = JSON.stringify({
+        currentValue: this.toggleOptions.isActive,
+        control: 'toggle'
+      });
+      
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+      
   }
   
 }

@@ -36,6 +36,7 @@ export class RemoteUIDemo implements OnInit {
   messages: any;
   isConnected: boolean;
   isConnecting: boolean;
+  toggleInvert : number;
   ref: ChangeDetectorRef;
   elem: any;
   world: any;
@@ -48,6 +49,7 @@ export class RemoteUIDemo implements OnInit {
     this.messages = [];
     this.isConnected = false;
     this.isConnecting = false;
+    this.toggleInvert = 1;
     this.world = new TerrainWorld(true, false);
     
  
@@ -141,7 +143,13 @@ export class RemoteUIDemo implements OnInit {
     
     if(msg.control === 'slider') {
       
-      this.world.camera.position.y = msg.currentValue;
+      this.world.camera.position.y = msg.currentValue * this.toggleInvert;
+      
+    }
+    
+   if(msg.control === 'toggle') {
+      
+     this.toggleInvert = this.toggleInvert === 1 ? -1 : 1;
       
     }
     

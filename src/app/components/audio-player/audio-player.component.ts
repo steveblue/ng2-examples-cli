@@ -11,7 +11,6 @@ template: `
   <audio controls src="{{url}}" type="audio/mpeg"
   (play)="onPlay($event)"
   (ended)="onTrackEnded($event)">
-
   </audio>
   <waveform-monitor></waveform-monitor>
 `,
