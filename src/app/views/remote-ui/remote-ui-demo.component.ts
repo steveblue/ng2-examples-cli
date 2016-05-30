@@ -3,6 +3,8 @@ import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core'
 import { NgClass } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
 import { TerrainWorld } from '../../scene/terrain.scene';
+import { ButtonComponent } from '../../components/button/button.component';
+
 
 declare let module: any;
 
@@ -13,13 +15,17 @@ declare let module: any;
   <h1 class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
     {{ headline }}
   </h1>
-  <p class="button" (click)="onClick($event)" [ngClass]="{ 'is--disabled' : isConnected === true, 'is--hidden' : isConnected === true }">
+
+  <ui-button (click)="onClick($event)">
     <span *ngIf="!isConnected"> Connect </span>
     <span *ngIf="isConnected"> Connected </span>
-  </p>
+    <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
+  </ui-button>
+  
   <div class="scene"></div>
   `,
-  styleUrls: ['remote-ui-demo.component.css']
+  styleUrls: ['remote-ui-demo.component.css'],
+  directives: [ ButtonComponent ]
 })
 
 export class RemoteUIDemo implements OnInit {
@@ -29,6 +35,7 @@ export class RemoteUIDemo implements OnInit {
   client: any;
   messages: any;
   isConnected: boolean;
+  isConnecting: boolean;
   ref: ChangeDetectorRef;
   elem: any;
   world: any;
@@ -40,7 +47,10 @@ export class RemoteUIDemo implements OnInit {
     this.elem = _el.nativeElement;
     this.messages = [];
     this.isConnected = false;
+    this.isConnecting = false;
     this.world = new TerrainWorld(true, false);
+    
+ 
 
 
     console.log(config);
@@ -129,6 +139,12 @@ export class RemoteUIDemo implements OnInit {
 
     }
     
+    if(msg.control === 'slider') {
+      
+      this.world.camera.position.y = msg.currentValue;
+      
+    }
+    
     this.messages.push(msg);
     this.ref.detectChanges();
   }
@@ -137,13 +153,13 @@ export class RemoteUIDemo implements OnInit {
     if(!this.isConnected) {
         
       this.client = new DataChannel(config.room, config.username, config.server);
-
+      this.isConnecting = true;
 
       this.client.emitter.subscribe((message)=>{
 
         if(message === 'open') {
           this.isConnected = true;
-       
+          this.isConnecting = false;
           this.client.observer.subscribe((res)=>{
          
             let msg = res[res.length-1].data; 

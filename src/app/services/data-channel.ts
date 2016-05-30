@@ -259,7 +259,7 @@ export class DataChannel {
   
 
   onDataChannelMessage(ev) {
-     console.log(ev);
+
     this.store.messages.push({
       id: this.count++,
       data: JSON.parse(ev.data),

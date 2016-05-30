@@ -143,7 +143,7 @@ export class DraggableDirective implements OnInit {
       this.newY = e.offsetY;
     }
 
-    if (this.isPositionable) {
+    if (this.isPositionable && this.isActive) {
 
       this.setPosition(this.newX, this.newY);
 

@@ -1,6 +1,6 @@
 import config from '../../conf';
 import { Component, OnInit, EventEmitter, ElementRef, ChangeDetectorRef} from '@angular/core';
-import { ButtonComponent } from '../../components/button/button.component'
+import { ButtonComponent } from '../../components/button/button.component';
 import { SliderComponent } from '../../components/slider/slider.component';
 import { DataChannel } from '../../services/data-channel';
 
@@ -14,6 +14,7 @@ declare let module: any;
     <ui-button [options]="buttonOptions">
       <span *ngIf="!isConnected"> Connect </span>
       <span *ngIf="isConnected"> Connected </span>
+      <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
     </ui-button>
 
     <slider [options]="joyOptions.left"></slider>
@@ -31,6 +32,7 @@ export class UIComponentTest implements OnInit {
   buttonOptions: any;
   client: any;
   isConnected: boolean;
+  isConnecting: boolean;
   elem: any;
   ref: any;
   
@@ -40,6 +42,7 @@ export class UIComponentTest implements OnInit {
     this.ref = _ref;
 
     this.isConnected = false;
+    this.isConnecting = false;
     
     this.buttonOptions = {
         position: 'absolute',
@@ -73,8 +76,8 @@ export class UIComponentTest implements OnInit {
     
     this.sliderOptions = {
         orient: 'is--vert',
-        min: 0.0,
-        max: 1.0,
+        min: 12.0,
+        max: -12.0,
         currentValue: 0,
         onUpdate: new EventEmitter(),
         position: 'absolute',
@@ -132,12 +135,14 @@ export class UIComponentTest implements OnInit {
     if(!this.isConnected) {
 
       this.client = new DataChannel(config.room, config.username, config.server);
-        
+      this.isConnecting = true;
+      
       this.client.emitter.subscribe((message)=>{
         console.log('hello!', message);
            
         if(message === 'open') {
           this.isConnected = true;
+          this.isConnecting = false;
           this.client.observer.subscribe((res)=>{
 
             console.log(res);

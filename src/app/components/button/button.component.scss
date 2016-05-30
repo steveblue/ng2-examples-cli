@@ -41,5 +41,9 @@
         display: block;
         transform: translate3d(6px, -26px, 0px);
       }  
+      .loading__icon {
+          top: 28px;
+          opacity: 0.3;
+      }
   }
 }
