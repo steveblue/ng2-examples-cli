@@ -134,7 +134,7 @@ export class DraggableDirective implements OnInit {
 
     if (this.options.orient === 'is--joystick') {
       this.elem.style.cursor = 'url("/assets/ui/slider-control-icon-transparent-cursor.png") 0 0, pointer';
-    }
+    } 
     
     if(this.isActive) {
       this.elem.style.border = '1px solid rgba(255,255,255,0.3)';
