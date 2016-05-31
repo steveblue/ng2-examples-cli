@@ -25,12 +25,15 @@ const barrels: string[] = [
 
   // Thirdparty barrels.
   'rxjs',
+  'three',
+  'd3',
 
   // App specific barrels.
   'app',
   'app/components',
   'app/directives',
-  'app/services'
+  'app/services',
+  'app/views'
   /** @cli-barrel */
 ];
 

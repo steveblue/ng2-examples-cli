@@ -5,7 +5,6 @@ import { DataChannel } from '../../services/data-channel';
 import { TerrainWorld } from '../../scene/terrain.scene';
 import { ButtonComponent } from '../../components/button/button.component';
 
-
 declare let module: any;
 
 @Component({

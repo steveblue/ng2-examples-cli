@@ -29,7 +29,9 @@ module.exports = function(defaults) {
         'rxjs/**/*.js.map',
         '@angular/**/*.js.map',
         'd3/d3.js',
-        'three/build/three.js'
+        'three/build/three.js',
+        'three/examples/js/postprocessing/*.js',
+        'three/examples/js/shaders/*.js'
       ]
     });
     let styles = mergeTrees(_.map(glob.sync('src/**/*.scss'), function(sassFile) {

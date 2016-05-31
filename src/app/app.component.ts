@@ -10,6 +10,7 @@ import { MusicPlayer } from './views/music-player/music-player.component';
 import { UIComponentTest } from './views/ui-test/ui-test.component';
 import { DataChannelClient } from './views/rtc-client/rtc-client.component';
 import { RemoteUIDemo } from './views/remote-ui/remote-ui-demo.component';
+import { ParticleComponent } from './views/particle/particle.component';
 import { GlobalNav } from './components/nav/nav.component';
 
 declare let module: any;
@@ -35,7 +36,8 @@ declare let module: any;
   {path:'/ui', component: UIComponentTest},
   {path:'/about', component: About},
   {path:'/remote', component: RemoteUIDemo},
-  {path:'/webrtc/client', component: DataChannelClient}
+  {path:'/webrtc/client', component: DataChannelClient},
+  {path:'/particle', component: ParticleComponent}
 ])
 
 export class AppComponent {
