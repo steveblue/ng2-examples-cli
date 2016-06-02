@@ -1,16 +1,41 @@
 'use strict';
 /* global require, module */
 
-var Angular2App = require('angular-cli/lib/broccoli/angular2-app');
-var compileSass = require('broccoli-sass');
-var mergeTrees = require('broccoli-merge-trees');
-var _ = require('lodash');
-var glob = require('glob');
+
+const Angular2App = require('angular-cli/lib/broccoli/angular2-app');
+const compileSass = require('broccoli-sass');
+const compileCSS = require('broccoli-postcss');
+const cssnext = require('postcss-cssnext');
+const cssnano = require('cssnano');
+const mergeTrees = require('broccoli-merge-trees');
+const _ = require('lodash');
+const glob = require('glob');
+
+
+var options =  {
+  plugins: [
+    {
+      module: cssnext,
+      options: {
+          browsers: ['> 1%'],
+          warnForDuplicates: false
+      }
+    },
+    {
+      module: cssnano,
+      options: {
+          safe: true,
+          sourcemap: true
+      }
+    }
+  ]
+};
+
 
 module.exports = function(defaults) {
   
   let sourceDir = 'src';
-  let app = new Angular2App(defaults, {
+  let appTree = new Angular2App(defaults, {
       sourceDir: sourceDir,
       sassCompiler: {
         includePaths: [
@@ -34,9 +59,14 @@ module.exports = function(defaults) {
         'three/examples/js/shaders/*.js'
       ]
     });
-    let styles = mergeTrees(_.map(glob.sync('src/**/*.scss'), function(sassFile) {
+    
+    
+    let sass = mergeTrees(_.map(glob.sync('src/**/*.scss'), function(sassFile) {
         sassFile = sassFile.replace('src/', '');
         return compileSass(['src'], sassFile, sassFile.replace(/.scss$/, '.css'));
     }));
-    return mergeTrees([styles, app], { overwrite: true });
+    
+    let css = compileCSS(sass, options);
+
+    return mergeTrees([appTree, sass, css], { overwrite: true });
 };
