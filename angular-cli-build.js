@@ -1,7 +1,6 @@
 'use strict';
 /* global require, module */
 
-
 const Angular2App = require('angular-cli/lib/broccoli/angular2-app');
 const compileSass = require('broccoli-sass');
 const compileCSS = require('broccoli-postcss');
@@ -50,8 +49,8 @@ module.exports = function(defaults) {
         'reflect-metadata/*.js',
         'reflect-metadata/*.js.map',
         'rxjs/**/*.js',
-        '@angular/**/*.js',
         'rxjs/**/*.js.map',
+        '@angular/**/*.js',
         '@angular/**/*.js.map',
         'd3/d3.js',
         'three/build/three.js',
