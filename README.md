@@ -1,7 +1,7 @@
 
 #Angular 2 Examples
 
-This repo is a playground for building reusable Components for Angular 2, now with support for Angular CLI.
+This repo is a playground for building reusable Components for Angular 2 and figuring out a suitable workflow with angular cli.
 
 ##UI Sliders
 
@@ -94,7 +94,7 @@ The Angular 2 team has chosen to support Typescript and several tutorial authors
 
 ## CSS ##
 
-I am really starting to like the way Web Components are styled. Each component has it's own CSS which gives us access to the parent with the `:host` selector.
+I am really starting to like the way Web Components are styled. Each component has it's own CSS which gives us access to the parent with the `:host` selector. One thing that tripped me up about the CLI was that there is no support for global css out of the box. There is an example of compiliing SASS and using PostCSS in `angular-cli-build.js`.
 
 
 ## Installation ##
