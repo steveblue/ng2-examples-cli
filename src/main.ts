@@ -11,7 +11,8 @@ if (environment.production) {
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,
-  HTTP_PROVIDERS
+  HTTP_PROVIDERS,
+  FORM_PROVIDERS
   //provide(LocationStrategy, { useClass : HashLocationStrategy })
 ]);
 
