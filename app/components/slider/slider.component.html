@@ -1,0 +1,10 @@
+  <div class="ui--slider" 
+       [ngClass]="{'is--hor' : options.orient === 'is--hor', 
+                   'is--vert' : options.orient === 'is--vert', 
+                   'is--joystick' : options.orient === 'is--joystick'}">
+    <div class="ui--slider-container" [uiDraggable]="options">
+      <div class="ui--slider-range" >
+        <div class="ui--slider-handle" [ngStyle]="{ transform: transform }" ></div>
+      </div>
+    </div>
+  </div>
