@@ -79,8 +79,8 @@ export class UIComponentTest implements OnInit {
       }, 
       right:  {
         orient: 'is--joystick',
-        min: [-1.0,1.0],
-        max: [1.0,-1.0],
+        min: [(window.innerWidth / 2)*-1, (window.innerHeight / 2)*-1],
+        max: [(window.innerWidth / 2), (window.innerHeight / 2)],
         currentValue: [0,0],
         onUpdate: new EventEmitter(),
         position: 'absolute',

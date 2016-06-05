@@ -200,7 +200,7 @@ export class TerrainWorld {
 
 
     update() {
-
+  
       this.controls.update(this.clock.getDelta());
 
       // this.raycaster.set( this.camera.position, this.controlsVector.sub( this.camera.position ).normalize() );

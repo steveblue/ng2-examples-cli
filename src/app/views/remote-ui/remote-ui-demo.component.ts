@@ -118,39 +118,8 @@ export class RemoteUIDemo implements OnInit {
     }
     
     if(msg.control === 'joyRight') {
-      if(data[0] < 0) {
-        console.log('left');
-        this.world.controls.moveLeft = true;
-        this.world.controls.moveRight = false;
-      } else {
-        this.world.controls.moveLeft = false;
-      }
-
-      if(data[0] > 0) {
-        console.log('right');
-        this.world.controls.moveLeft = false;
-        this.world.controls.moveRight = true;
-      } else {
-        this.world.controls.moveRight = false;
-      }
-
-
-      // if(data[1] > 0) {
-      //   console.log('forward');
-      //   this.world.controls.moveForward = true;
-      //   this.world.controls.moveBackward = false;
-      // } else {
-      //   this.world.controls.moveForward = false;
-      // }
-
-      // if(data[1] < 0) {
-      //   console.log('backward');
-      //   this.world.controls.moveBackward = true;
-      //   this.world.controls.moveForward = false;
-      // } else {
-      //   this.world.controls.moveBackward = false;
-      // }
-
+        this.world.controls.mouseX = data[0];
+        this.world.controls.mouseY = data[1];
     }
     
     if(msg.control === 'slider') {
