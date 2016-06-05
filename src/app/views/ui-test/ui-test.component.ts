@@ -1,5 +1,6 @@
 import config from '../../conf';
 import { Component, OnInit, EventEmitter, ElementRef, ChangeDetectorRef} from '@angular/core';
+import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
 import { ToggleComponent } from '../../components/toggle/toggle.component';
 import { SliderComponent } from '../../components/slider/slider.component';
@@ -10,31 +11,15 @@ declare let module: any;
 @Component({
   selector: 'view',
   moduleId: module.id,
-  template: `
-  
-    <ui-button [options]="buttonOptions" 
-               (click)="onClick($event)">
-      <span *ngIf="!isConnected"> Connect </span>
-      <span *ngIf="isConnected"> Connected </span>
-      <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
-    </ui-button>
-    
-    <ui-toggle [options]="toggleOptions" 
-               (click)="onToggle($event)">
-      <span *ngIf="!toggleOptions.isActive"> Invert </span>
-      <span *ngIf="toggleOptions.isActive"> Default </span>
-    </ui-toggle>
-
-    <slider [options]="joyOptions.left"></slider>
-    <slider [options]="sliderOptions"></slider>
-    <slider [options]="joyOptions.right"></slider>
-  `,
-  directives: [ SliderComponent, ButtonComponent, ToggleComponent ],
-  styleUrls: ['ui-test.component.css']
+  templateUrl: 'ui-test.component.html',
+  styleUrls: ['ui-test.component.css'],
+  providers: [ FORM_PROVIDERS ],
+  directives: [ FORM_DIRECTIVES, SliderComponent, ButtonComponent, ToggleComponent ],
 })
 
 export class UIComponentTest implements OnInit {
   
+  copy: any;
   sliderOptions: any;
   joyOptions: any;
   buttonOptions: any;
@@ -42,28 +27,41 @@ export class UIComponentTest implements OnInit {
   client: any;
   isConnected: boolean;
   isConnecting: boolean;
+  isButtonDisabled: boolean;
   isInverted: boolean;
+  form: ControlGroup;
+  room: Control;
   elem: any;
   ref: any;
   
-  constructor(private _el: ElementRef, private _ref: ChangeDetectorRef) {
+  constructor(private _el: ElementRef, 
+              private _ref: ChangeDetectorRef,
+              private _fb: FormBuilder) {
     
     this.elem = _el.nativeElement;
     this.ref = _ref;
 
     this.isConnected = false;
     this.isConnecting = false;
+    this.isButtonDisabled = true;
     
-    this.buttonOptions = {
-        position: 'absolute',
-        x: (30) + 'px',
-        y: window.innerHeight - 280 + 'px'
+    
+    this.room = new Control('');
+    
+    this.form = _fb.group({
+      'room': this.room
+    });
+    
+    this.copy = {
+      headline : 'Remote Control',
+      line1: 'Visit /remote on desktop computer to get code'
     };
+    
     
     this.toggleOptions = {
         isActive: false,
         position: 'absolute',
-        x: (200) + 'px',
+        x: (206) + 'px',
         y: window.innerHeight - 280 + 'px'
     };
     
@@ -110,6 +108,16 @@ export class UIComponentTest implements OnInit {
     
     // this.client is undefined!
     
+      this.form.valueChanges.subscribe((val) => {
+          console.log(JSON.stringify(val));
+         if(val.room.length === 5) {
+           this.isButtonDisabled = false;
+         } else {
+           this.isButtonDisabled = true;
+         }
+         
+      });
+    
     
      this.joyOptions.left.onUpdate.subscribe((val) => {
       let msg = JSON.stringify({
@@ -122,6 +130,7 @@ export class UIComponentTest implements OnInit {
          this.client.channel.send(msg);
       }
      });
+     
      this.joyOptions.right.onUpdate.subscribe((val) => {
       let msg = JSON.stringify({
         currentValue: this.joyOptions.right.currentValue,
@@ -135,6 +144,7 @@ export class UIComponentTest implements OnInit {
       }
 
      });
+     
      this.sliderOptions.onUpdate.subscribe((val) => {
       let msg = JSON.stringify({
         currentValue: this.sliderOptions.currentValue,
@@ -149,9 +159,9 @@ export class UIComponentTest implements OnInit {
   }
   onClick() {
  
-    if(!this.isConnected) {
+    if(!this.isConnected && !this.isButtonDisabled) {
 
-      this.client = new DataChannel(config.room, config.username, config.server);
+      this.client = new DataChannel(this.room.value, config.username, config.server);
       this.isConnecting = true;
       
       this.client.emitter.subscribe((message)=>{

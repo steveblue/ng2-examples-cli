@@ -1,6 +1,6 @@
 import config from '../../conf';
 import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
 import { TerrainWorld } from '../../scene/terrain.scene';
 import { ButtonComponent } from '../../components/button/button.component';
@@ -10,55 +10,68 @@ declare let module: any;
 @Component({
   selector: 'view',
   moduleId: module.id,
-  template: `
-  <h1 class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
-    {{ headline }}
-  </h1>
-
-  <ui-button (click)="onClick($event)">
-    <span *ngIf="!isConnected"> Connect </span>
-    <span *ngIf="isConnected"> Connected </span>
-    <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
-  </ui-button>
-  
-  <div class="scene"></div>
-  `,
+  templateUrl: 'remote-ui-demo.component.html',
   styleUrls: ['remote-ui-demo.component.css'],
-  directives: [ ButtonComponent ]
+  providers: [ FORM_PROVIDERS ],
+  directives: [ FORM_DIRECTIVES, ButtonComponent ]
 })
 
 export class RemoteUIDemo implements OnInit {
-  
-  headline: string;
-  copy: string;
+
+  copy: any;
   client: any;
   messages: any;
   isConnected: boolean;
   isConnecting: boolean;
+  isButtonDisabled: boolean;
+  form: ControlGroup;
+  room: Control;
   toggleInvert : number;
   ref: ChangeDetectorRef;
   elem: any;
   world: any;
   
-  constructor(private _ref: ChangeDetectorRef, private _el: ElementRef) {
+  constructor(private _ref: ChangeDetectorRef,
+              private _el: ElementRef,
+              private _fb: FormBuilder ) {
 
-    this.headline = 'Remote Terrain';
     this.ref = _ref;
     this.elem = _el.nativeElement;
     this.messages = [];
     this.isConnected = false;
     this.isConnecting = false;
+    this.isButtonDisabled = true;
     this.toggleInvert = 1;
-    this.world = new TerrainWorld(true, false);
+      
+    this.copy = {
+      headline : 'Remote Terrain',
+      line1: 'Visit /ui on a mobile device',
+      line2: 'Use this code to connect the controller'
+    };
     
- 
-
+    this.room = new Control(config.room);
+    
+    this.form = _fb.group({
+      'room': this.room
+    });
+     
+    this.world = new TerrainWorld(true, false);
 
     console.log(config);
 
   }
   ngOnInit() {
      this.world.setContainer(this.elem.querySelector('.scene'));
+     
+    this.form.valueChanges.subscribe((val) => {
+         console.log(JSON.stringify(val));
+         if(val.room.length === 5) {
+           this.isButtonDisabled = false;
+         } else {
+           this.isButtonDisabled = true;
+         }
+    });
+    
   }
   onKeyDown(ev) {
     

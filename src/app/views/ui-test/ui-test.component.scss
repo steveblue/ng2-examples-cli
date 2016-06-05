@@ -23,11 +23,28 @@
 }
 
 .copy {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  z-index: 500;
+  transform: translateX(-50%) translateY(-50%);
+  webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: hidden;
   padding-top: 120px;
   padding-left: 30px;
   z-index: 1000;
-  &.hidden {
+  &.is--hidden {
     display: none;
+  }
+  input {
+    margin-right: 10px;
+  }
+  input, ui-button {
+    position: relative;
+    float:left;
+  }
+  ui-button {
+    width: 80px;
   }
 }
 

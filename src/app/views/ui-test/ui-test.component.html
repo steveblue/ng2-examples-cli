@@ -1,0 +1,29 @@
+  <header class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
+    <h1>
+      {{ copy.headline }}
+    </h1>
+     <p>{{copy.line1}}</p>
+     <p>{{copy.line2}}</p>
+     <form [ngFormModel]="form">
+        <input type="text" ngControl="room" class="is--code"/>
+        <ui-button (click)="onClick($event)"  [ngClass]="{ 'is--disabled': isButtonDisabled === true,
+                                                           'is--enabled': isButtonDisabled === false }">
+            <span *ngIf="!isConnected && isConnecting === false"> Connect </span>
+            <span *ngIf="isConnected"> Connected </span>
+            <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
+        </ui-button>
+     </form>
+
+  </header>
+
+
+
+<ui-toggle [options]="toggleOptions" 
+            (click)="onToggle($event)">
+    <span *ngIf="!toggleOptions.isActive"> Invert </span>
+    <span *ngIf="toggleOptions.isActive"> Default </span>
+</ui-toggle>
+
+<slider [options]="joyOptions.left"></slider>
+<slider [options]="sliderOptions"></slider>
+<slider [options]="joyOptions.right"></slider>

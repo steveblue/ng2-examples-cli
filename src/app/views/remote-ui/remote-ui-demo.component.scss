@@ -24,11 +24,25 @@
 
 .copy {
   position: absolute;
-  bottom: 0px;
+  top: 33%;
+  left: 50%;
   z-index: 500;
-  transform: translateX(30px) translateY(-120px);
+  transform: translateX(-50%) translateY(-50%);
   webkit-font-smoothing: antialiased;
   backface-visibility: hidden;
+ &.is--hidden {
+    display: none;
+  }
+  input {
+    margin-right: 10px;
+  }
+  input, ui-button {
+    position: relative;
+    float:left;
+  }
+  ui-button {
+    width: 80px;
+  }
 }
 
 .is--hidden {
@@ -39,10 +53,14 @@
   display: block;
 }
 
-ui-button {
-  position: absolute;
-  bottom: 0px;
-  transform: translateX(30px) translateY(-80px);
-  z-index: 500;
-}
+// ui-button {
+//   position: absolute;
+//   bottom: 0px;
+//   transform: translateX(30px) translateY(-80px);
+//   z-index: 500;
+// }
 
+
+p {
+  line-height: 0.5em;
+}
