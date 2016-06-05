@@ -44,18 +44,13 @@ module.exports = function(defaults) {
       vendorNpmFiles: [
         'systemjs/dist/system-polyfills.js',
         'systemjs/dist/system.src.js',
-        'zone.js/dist/*.js',
         'es6-shim/es6-shim.js',
-        'reflect-metadata/*.js',
-        'reflect-metadata/*.js.map',
-        'rxjs/**/*.js',
-        'rxjs/**/*.js.map',
-        '@angular/**/*.js',
-        '@angular/**/*.js.map',
-        'd3/d3.js',
-        'three/build/three.js',
-        'three/examples/js/postprocessing/*.js',
-        'three/examples/js/shaders/*.js'
+        'zone.js/dist/**/*.+(js|js.map)',
+        'reflect-metadata/**/*.+(js|js.map)',
+        'rxjs/**/*.+(js|js.map)',
+        '@angular/**/*.+(js|js.map)',
+        'd3/**/*.+(js|js.map)',
+        'three/**/*.+(js|js.map)'
       ]
     });
     
