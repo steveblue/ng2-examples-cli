@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["index.ts"],"names":[],"mappings":";AAAA,4BAA4B,eAAe,CAAC;AAAnC,gDAAmC;AAC5C,8BAA6B,iBAAiB,CAAC;AAAtC,oDAAsC","sourcesContent":["export { environment } from './environment';\nexport { AppComponent } from './app.component';\n"]}
