@@ -12,7 +12,7 @@ declare let module: any;
         <li class="nav__item" ><a [routerLink]="['/']" >home</a></li>
         <li class="nav__item" ><a [routerLink]="['/ui']" >ui</a></li>
         <li class="nav__item" ><a [routerLink]="['/music']" >music</a></li>
-        <li class="nav__item" ><a [routerLink]="['/webrtc/client']" >webrtc</a></li>
+        <li class="nav__item" ><a [routerLink]="['/synth']" >synth</a></li>
         <li class="nav__item" ><a [routerLink]="['/remote']" >remote</a></li>
         <li class="nav__item" ><a [routerLink]="['/about']" >about</a></li>
       </ul>

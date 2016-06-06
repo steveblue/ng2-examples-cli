@@ -1,0 +1,20 @@
+  <header class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
+    <h1>
+      {{ copy.headline }}
+    </h1>
+     <p>{{copy.line1}}</p>
+     <p>{{copy.line2}}</p>
+     <form [ngFormModel]="form">
+        <input type="text" ngControl="room" class="is--code"/>
+          <ui-button (click)="onClick($event)">
+                <span *ngIf="!isConnected && isConnecting === false"> Connect </span>
+                <span *ngIf="isConnected"> Connected </span>
+                <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
+                <div class="ui__button-notification"></div>
+          </ui-button>
+     </form>
+  </header>
+
+  
+  <div class="scene"></div>
+  <video autoplay ></video>

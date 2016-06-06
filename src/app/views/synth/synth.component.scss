@@ -1,0 +1,70 @@
+:host {
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.scene {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+}
+
+
+video {
+  display: none;
+}
+
+.copy {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  z-index: 500;
+  transform: translateX(-50%) translateY(-50%);
+  webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
+ &.is--hidden {
+    display: none;
+  }
+  input {
+    margin-right: 10px;
+  }
+  input, ui-button {
+    position: relative;
+    float:left;
+  }
+  ui-button {
+    width: 80px;
+  }
+}
+
+.is--hidden {
+  display: none;
+}
+
+.is--visible {
+  display: block;
+}
+
+// ui-button {
+//   position: absolute;
+//   bottom: 0px;
+//   transform: translateX(30px) translateY(-80px);
+//   z-index: 500;
+// }
+
+
+p {
+  line-height: 0.5em;
+}
