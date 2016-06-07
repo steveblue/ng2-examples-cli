@@ -54,14 +54,14 @@ export class RemoteUIDemo implements OnInit {
     this.form = _fb.group({
       'room': this.room
     });
-     
-    this.world = new TerrainWorld(true, false);
-
+    
     console.log(config);
 
   }
   ngOnInit() {
-     this.world.setContainer(this.elem.querySelector('.scene'));
+    
+    this.world = new TerrainWorld(true, false);
+    this.world.setContainer(this.elem.querySelector('.scene'));
      
     this.form.valueChanges.subscribe((val) => {
          console.log(JSON.stringify(val));

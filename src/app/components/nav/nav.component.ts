@@ -14,6 +14,7 @@ declare let module: any;
         <li class="nav__item" ><a [routerLink]="['/music']" >music</a></li>
         <li class="nav__item" ><a [routerLink]="['/synth']" >synth</a></li>
         <li class="nav__item" ><a [routerLink]="['/remote']" >remote</a></li>
+        <li class="nav__item" ><a [routerLink]="['/particle']" >particle</a></li>
         <li class="nav__item" ><a [routerLink]="['/about']" >about</a></li>
       </ul>
     </nav>

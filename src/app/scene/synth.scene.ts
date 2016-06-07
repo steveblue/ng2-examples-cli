@@ -89,7 +89,6 @@ export class Synth {
   multiply : number;
   displacement : number;
   opacity : any = 1;
-  saturate : number;
   bg : string;
   //setting.current = 0;
   presets: any[] = [];
@@ -122,13 +121,9 @@ export class Synth {
     var that = this;
     
     this.clock = new THREE.Clock();
-
-    
     
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
     this.scene = new THREE.Scene();
-    
-
     
     this.texture = new THREE.Texture(this.videoInput);
     this.texture.minFilter = THREE.LinearFilter;
@@ -174,93 +169,90 @@ export class Synth {
       wireframe: this.wireframe,
       transparent: true,
       overdraw: false
-
     });
     
-
-    this.videoMaterial.renderToScreen = true;
-    this.videoMaterial.wireframe = true;
-
-
-   // this.renderer.autoClear = false;
-
-
-    // this.fill = new THREE.AmbientLight(0x707070); // soft white light
+    this.videoMaterial.renderToScreen = false;
+   
+    
+    // this.fill = new THREE.AmbientLight(0xffffff); // soft white light
     // this.scene.add(this.fill);
 
-    this.key = new THREE.SpotLight(0xffffff);
-    this.key.position.set(0, 0, 5000).normalize();
-    //this.key.target = this.mesh;
+    this.key = new THREE.DirectionalLight(0xffffff);
+    this.key.position.set(0, -100, 100).normalize();
 
-    // this.key.intensity = 5000;
-    // this.key.castShadow = true;
+    this.key.intensity = 0.3;
+    this.key.castShadow = true;
     this.scene.add(this.key);
-
-    this.back = new THREE.SpotLight(0xffffff);
-    this.back.position.set(0, 0, -5000).normalize();
    
-    this.back.intensity = 5000;
-    this.back.castShadow = true;
-    this.scene.add(this.back);
+
+    this.fill = new THREE.DirectionalLight(0xffffff);
+    this.fill.position.set(0, 100, 100).normalize();
+   
+    this.fill.intensity = 0.1;
+    this.fill.castShadow = true;
+    this.scene.add(this.fill);
+   
     
-
-
-
-    if (this.cam === true) {
-      this.initStream();
-    }
+    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.autoClear = false;
     
-      Promise.all([
-        
-        System.import('/vendor/three/examples/js/shaders/CopyShader.js'),
-        System.import('/vendor/three/examples/js/shaders/ConvolutionShader.js'),
-        System.import('/vendor/three/examples/js/shaders/BokehShader.js'),
-        System.import('/vendor/three/examples/js/shaders/HueSaturationShader.js'),
-        System.import('/vendor/three/examples/js/postprocessing/EffectComposer.js')
-      ]).then(function(){
-        
-        return Promise.all([
-        System.import('/vendor/three/examples/js/postprocessing/MaskPass.js'),
-        System.import('/vendor/three/examples/js/postprocessing/RenderPass.js'),
-        System.import('/vendor/three/examples/js/postprocessing/ShaderPass.js'),
-        System.import('/vendor/three/examples/js/postprocessing/BokehPass.js')]);
-        
-      }).then(function(){
-        
+    // var size = 10;
+    // var step = 1;
 
-        //postprocessing
-        that.composer = new THREE.EffectComposer(that.renderer);
+    // var gridHelper = new THREE.GridHelper( size, step );
+    // this.scene.add( gridHelper );
+    
+    
+    Promise.all([
+      
+      System.import('/vendor/three/examples/js/shaders/CopyShader.js'),
+      System.import('/vendor/three/examples/js/shaders/ConvolutionShader.js'),
+      System.import('/vendor/three/examples/js/shaders/BokehShader.js'),
+      System.import('/vendor/three/examples/js/shaders/HueSaturationShader.js'),
+      System.import('/vendor/three/examples/js/postprocessing/EffectComposer.js')
+    ]).then(function(){
+      
+      return Promise.all([
+      System.import('/vendor/three/examples/js/postprocessing/MaskPass.js'),
+      System.import('/vendor/three/examples/js/postprocessing/RenderPass.js'),
+      System.import('/vendor/three/examples/js/postprocessing/ShaderPass.js'),
+      System.import('/vendor/three/examples/js/postprocessing/BloomPass.js')]);
+      
+    }).then(function(){
+      
+      //postprocessing
+      that.composer = new THREE.EffectComposer(that.renderer);
 
-        that.renderModel = new THREE.RenderPass(that.scene, that.camera);
-        that.composer.addPass(that.renderModel);
+      that.renderModel = new THREE.RenderPass(that.scene, that.camera);
+      that.composer.addPass(that.renderModel);
+      
+      //that.effectBloom = new THREE.BloomPass(3.3, 20, 4.0, 256);
+      //that.effectBloom = new THREE.BloomPass(1.5, 5.0, 2.4, 256);
+      //that.composer.addPass(that.effectBloom);
 
-        that.effectHue = new THREE.ShaderPass(THREE.HueSaturationShader);
-        that.effectHue.renderToScreen = true;
-        that.effectHue.uniforms['hue'].value = 0.0;
-        that.effectHue.uniforms['saturation'].value = 0.0;
-        that.composer.addPass(that.effectHue);
-        
-            
-        that.setDefaults(_conf, 0);
-        that.initComplete = true;
-        
-      });
+      that.effectHue = new THREE.ShaderPass(THREE.HueSaturationShader);
+      that.effectHue.renderToScreen = true;
+      that.composer.addPass(that.effectHue);   
+          
+      that.setDefaults(_conf, 0);
+      that.initComplete = true;
+      
+    });
 
     window.addEventListener('resize', this.onResize.bind(this), false);
     document.addEventListener('mousemove', this.onDocumentMouseMove.bind(this), false);
-
-
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-
+     
   }
   
   update() {
 
-      window.requestAnimationFrame(this.update.bind(this));
-      this.render();
+    window.requestAnimationFrame(this.update.bind(this));
+    this.render();
 
- }
+  }
     
   
  render() {
@@ -378,21 +370,17 @@ export class Synth {
 
         }
         
-        setTimeout(function() {
-          //  that.shape = shape;
-          that.key.target = that.mesh;
-          that.back.target = that.mesh;
-          that.meshUpdate = true;
-          that.scene.add(that.mesh);
-          that.mesh.doubleSided = true;
-          that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0.0;
-          that.mesh.scale.x = that.mesh.scale.y = that.mesh.scale.z = that.scale;
-          that.geometry.dynamic = true;
-          that.geometry.verticesNeedUpdate = true;
-          that.videoMaterial.renderToScreen = true;
-         
-        }, 100);
-
+        that.key.target = that.mesh;
+        that.fill.target = that.mesh;
+        that.meshUpdate = true;
+        that.scene.add(that.mesh);
+        that.mesh.doubleSided = true;
+        that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0.0;
+        that.mesh.scale.x = that.mesh.scale.y = that.mesh.scale.z = that.scale;
+        that.mesh.castShadow = true;
+        that.geometry.dynamic = true;
+        that.geometry.verticesNeedUpdate = true;
+        that.videoMaterial.renderToScreen = true;
 
   }
   
@@ -404,23 +392,21 @@ export class Synth {
     this.scene.add(mesh);
   }
   
-  onResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.composer.reset();
-  }
-  
-  onDocumentMouseMove( event : any ) {
-    this.mouseX = (event.clientX - this.windowHalfX);
-    this.mouseY = (event.clientY - this.windowHalfY) * 0.3;
-  }
+  setParams() {
+    
+    this.videoMaterial.uniforms["displace"].value = this.displacement;
+    this.videoMaterial.uniforms["multiplier"].value = this.multiply;
+    this.videoMaterial.uniforms["opacity"].value = parseFloat(this.opacity);
+    this.videoMaterial.uniforms["originX"].value = parseFloat(this.originX);
+    this.videoMaterial.uniforms["originY"].value = parseFloat(this.originY);
+    this.videoMaterial.uniforms["originZ"].value = parseFloat(this.originZ);
 
-  setContainer( elem: any ) {
+    
+    this.effectHue.uniforms['hue'].value = this.hue;
+    this.effectHue.uniforms['saturation'].value = this.saturation;
 
-    this.elem = elem;
-    this.elem.appendChild(this.renderer.domElement);
-
+    this.renderer.setClearColor(parseInt(this.bg.replace('#', '0x')), 1.0);
+    
   }
   
   setDefaults( _conf: any, _index: number ) {
@@ -439,34 +425,14 @@ export class Synth {
     this.multiply = json.multiplier;
     this.displacement = json.displace;
     this.opacity = json.opacity;
-    this.saturate = json.saturation;
+    this.saturation = json.saturation;
     this.hue = json.hue;
     this.bg = json.bgColor;
     this.detail = json.detail;
-    this.meshChange(json.shape, json.detail, json.detail);
     this.wireframe = json.wireframe;
     
-
-    this.videoMaterial.uniforms["displace"].value = this.displacement;
-    this.videoMaterial.uniforms["multiplier"].value = this.multiply;
-    this.videoMaterial.uniforms["opacity"].value = parseFloat(this.opacity);
-    this.videoMaterial.uniforms["originX"].value = parseFloat(this.originX);
-    this.videoMaterial.uniforms["originY"].value = parseFloat(this.originY);
-    this.videoMaterial.uniforms["originZ"].value = parseFloat(this.originZ);
-
-
-    this.effectHue.uniforms['hue'].value = this.hue;
-    if (this.saturation >= -1.0 && this.saturation < 1.0) {
-      this.effectHue.uniforms['saturation'].value = this.saturation;
-    } else if (this.saturation < -1.0) {
-      this.effectHue.uniforms['saturation'].value = -1.0;
-    } else if (this.saturation > 1.0) {
-      this.effectHue.uniforms['saturation'].value = 1.0;
-    }
-    //this.hex = this.background;
-    // $('#canvas').css('background-color', this.bgColor);
-   
-     this.renderer.setClearColor(parseInt(this.bg.replace('#', '0x')), 1.0);
+    this.meshChange(json.shape, json.detail, json.detail);
+    this.setParams();
     
   }
   
@@ -545,6 +511,25 @@ export class Synth {
     //   this.playVideo(0);
     // }
     
+  }
+     
+  onResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.composer.reset();
+  }
+  
+  onDocumentMouseMove( event : any ) {
+    this.mouseX = (event.clientX - this.windowHalfX);
+    this.mouseY = (event.clientY - this.windowHalfY) * 0.3;
+  }
+
+  setContainer( elem: any ) {
+
+    this.elem = elem;
+    this.elem.appendChild(this.renderer.domElement);
+
   }
 
 
