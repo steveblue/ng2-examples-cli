@@ -2,9 +2,19 @@
  * User Configuration.
  **********************************************************************************************/
 /** Map relative paths to URLs. */
-var map = {};
+var map = {
+    'firebase': 'vendor/firebase/lib/firebase-web.js',
+    'lib': 'lib'
+};
 /** User packages configuration. */
-var packages = {};
+var packages = {
+    'firebase': {
+        defaultExtension: 'js'
+    },
+    'lib': {
+        defaultExtension: 'js'
+    }
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /***********************************************************************************************
  * Everything underneath this line is managed by the CLI.
@@ -22,10 +32,13 @@ var barrels = [
     'rxjs',
     'three',
     'd3',
+    'firebase',
     // App specific barrels.
     'app',
     'app/components',
     'app/directives',
+    'app/models',
+    'app/schema',
     'app/services',
     'app/views'
 ];

@@ -30,11 +30,6 @@
       }
     })();
   </script>
-  <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
-  <script src="vendor/d3/d3.js"></script>
-  <script src="vendor/three/build/three.js"></script>
-  <script src="lib/FirstPersonControls.js"></script>
-  <script src="lib/TerrainLoader.js"></script>
 
 </head>
 <body>
@@ -42,16 +37,24 @@
   <app>
     <div class="loading__icon is--large is--center"></div>
   </app>
-
+  <script src="vendor/three/build/three.js"></script>
   <script src="vendor/es6-shim/es6-shim.js"></script>
   <script src="vendor/reflect-metadata/Reflect.js"></script>
   <script src="vendor/systemjs/dist/system.src.js"></script>
   <script src="vendor/zone.js/dist/zone.js"></script>
 
   <script>
-    System.import('system-config.js').then(function () {
-      System.import('main');
-    }).catch(console.error.bind(console));
+    Promise.all([
+      System.import('vendor/d3/d3.js'),
+      System.import('vendor/firebase/lib/firebase-web.js'),
+      System.import('lib/TerrainLoader.js'),
+      System.import('lib/FirstPersonControls.js'),
+      System.import('system-config.js').then(function () {
+        System.import('main');
+      }).catch(console.error.bind(console))
+    ]);
+
+
   </script>
 </body>
 </html>

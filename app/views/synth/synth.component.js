@@ -37,20 +37,25 @@ var SynthComponent = (function () {
         });
     }
     SynthComponent.prototype.ngOnInit = function () {
+        // TODO: internalize all arguments 
+        // TODO: make 1 argument with options
+        // TODO: figure out how to allow users to provide thier own html / css / js
+        // TODO: Hook up a gist
+        // TODO: make callback mandatory for messages in user's code
         var _this = this;
         this.world = new synth_scene_1.Synth(this.elem.querySelector('video'), true, true, [{
-                "camera": "0.0,-1130.0,1680.0",
+                "camera": "0,-400,400",
                 "shape": "plane",
-                "detail": 480,
-                "scale": 10.0,
+                "detail": 1024,
+                "scale": 1.5,
                 "wireframe": false,
-                "multiplier": 15.0,
-                "displace": 3.3,
-                "origin": "0,0,-2000.0",
-                "opacity": 0.3,
+                "multiplier": 5.0,
+                "displace": 24.0,
+                "origin": "0,0,-100",
+                "opacity": 0.2,
                 "hue": 0,
-                "saturation": 0.7,
-                "bgColor": "#000"
+                "saturation": 0.75,
+                "bgColor": "#000000"
             }]);
         this.world.setContainer(this.elem.querySelector('.scene'));
         this.world.defaultVideo('/assets/video/kinetic-light.mp4');

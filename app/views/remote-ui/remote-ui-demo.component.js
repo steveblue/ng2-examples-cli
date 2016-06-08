@@ -35,11 +35,11 @@ var RemoteUIDemo = (function () {
         this.form = _fb.group({
             'room': this.room
         });
-        this.world = new terrain_scene_1.TerrainWorld(true, false);
         console.log(conf_1.default);
     }
     RemoteUIDemo.prototype.ngOnInit = function () {
         var _this = this;
+        this.world = new terrain_scene_1.TerrainWorld(true, false);
         this.world.setContainer(this.elem.querySelector('.scene'));
         this.form.valueChanges.subscribe(function (val) {
             console.log(JSON.stringify(val));

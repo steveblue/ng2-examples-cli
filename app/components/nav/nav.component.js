@@ -28,7 +28,7 @@ var GlobalNav = (function () {
     GlobalNav = __decorate([
         core_1.Component({
             selector: 'global-nav',
-            template: "\n    <nav>\n      <ul [class.active]=\"isVisible\">\n        <li class=\"nav__item\" ><a [routerLink]=\"['/']\" >home</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/ui']\" >ui</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/music']\" >music</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/synth']\" >synth</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/remote']\" >remote</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/about']\" >about</a></li>\n      </ul>\n    </nav>\n   ",
+            template: "\n    <nav>\n      <ul [class.active]=\"isVisible\">\n        <li class=\"nav__item\" ><a [routerLink]=\"['/']\" >home</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/ui']\" >ui</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/music']\" >music</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/synth']\" >synth</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/remote']\" >remote</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/particle']\" >particle</a></li>\n        <li class=\"nav__item\" ><a [routerLink]=\"['/about']\" >about</a></li>\n      </ul>\n    </nav>\n   ",
             directives: [router_1.ROUTER_DIRECTIVES],
             moduleId: module.id,
             styleUrls: ['nav.component.css']

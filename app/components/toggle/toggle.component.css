@@ -1,1 +1,42 @@
-.toggle{background-size:100% 100%;border:1px solid hsla(0,0%,100%,.2);border-radius:8px;margin-top:10px;height:24px;color:hsla(0,0%,100%,.3);min-width:80px;max-width:180px;max-height:28px;height:28px;padding-top:8px;font-size:10px;font-family:Lato,sans-serif;cursor:pointer;-webkit-font-smoothing:subpixel-antialiased;-webkit-backface-visibility:none;backface-visibility:none;-webkit-transition:all .125s cubic-bezier(.23,1,.32,1);transition:all .125s cubic-bezier(.23,1,.32,1)}.toggle:hover{color:hsla(0,0%,100%,.6);border:1px solid hsla(0,0%,100%,.3);cursor:url(/assets/ui/slider-control-icon-transparent-cursor.png) 22 22,pointer}.toggle.is--active{background:-webkit-linear-gradient(left,rgba(255,0,0,0),rgba(255,0,0,0) 50%,hsla(0,0%,100%,.05) 51%,hsla(0,0%,100%,.05));background:linear-gradient(90deg,rgba(255,0,0,0),rgba(255,0,0,0) 50%,hsla(0,0%,100%,.05) 51%,hsla(0,0%,100%,.05))}.toggle.is--inactive{background:-webkit-linear-gradient(right,rgba(255,0,0,0),rgba(255,0,0,0) 50%,hsla(0,0%,100%,.05) 51%,hsla(0,0%,100%,.05));background:linear-gradient(270deg,rgba(255,0,0,0),rgba(255,0,0,0) 50%,hsla(0,0%,100%,.05) 51%,hsla(0,0%,100%,.05))}.toggle.is--disabled{cursor:default;color:hsla(0,0%,83%,.2);border:1px solid hsla(0,0%,100%,.1)}.toggle.is--disabled:hover{color:hsla(0,0%,100%,.2);border:1px solid hsla(0,0%,100%,.3)}:host .toggle span{display:block;-webkit-transform:translate3d(6px,-26px,0);transform:translate3d(6px,-26px,0)}:host .toggle .loading__icon{top:28px;opacity:.3}
+.toggle {
+  background-size: 100% 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  margin-top: 10px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.3);
+  min-width: 80px;
+  max-width: 180px;
+  max-height: 28px;
+  height: 28px;
+  cursor: pointer;
+  padding-top: 8px;
+  font-size: 10px;
+  font-family: 'Lato' sans-serif;
+  cursor: pointer;
+  -webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: none;
+  transition: 0.125s all cubic-bezier(0.23, 1, 0.32, 1); }
+  .toggle:hover {
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: url("/assets/ui/slider-control-icon-transparent-cursor.png") 22 22, pointer; }
+  .toggle.is--active {
+    background: linear-gradient(90deg, rgba(255, 0, 0, 0), rgba(255, 0, 0, 0) 50%, rgba(255, 255, 255, 0.05) 51%, rgba(255, 255, 255, 0.05)); }
+  .toggle.is--inactive {
+    background: linear-gradient(270deg, rgba(255, 0, 0, 0), rgba(255, 0, 0, 0) 50%, rgba(255, 255, 255, 0.05) 51%, rgba(255, 255, 255, 0.05)); }
+  .toggle.is--disabled {
+    cursor: default;
+    color: rgba(212, 212, 212, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1); }
+    .toggle.is--disabled:hover {
+      color: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3); }
+
+:host .toggle span {
+  display: block;
+  transform: translate3d(6px, -26px, 0px); }
+
+:host .toggle .loading__icon {
+  top: 28px;
+  opacity: 0.3; }

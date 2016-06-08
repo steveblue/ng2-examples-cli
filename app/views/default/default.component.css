@@ -1,1 +1,10 @@
-:host{position:absolute;display:block;top:32px;width:100%;height:auto;padding:30px;-webkit-perspective:1000px;perspective:1000px}:host h1{-webkit-transform-origin:50% 50%;transform-origin:50% 50%}
+:host {
+  position: absolute;
+  display: block;
+  top: 32px;
+  width: 100%;
+  height: auto;
+  padding: 30px;
+  perspective: 1000px; }
+  :host h1 {
+    transform-origin: 50% 50%; }

@@ -16,9 +16,9 @@ var ParticleComponent = (function () {
         this._el = _el;
         this.ref = _ref;
         this.elem = _el.nativeElement;
-        this.world = new particle_scene_1.ParticleWorld(false, false);
     }
     ParticleComponent.prototype.ngOnInit = function () {
+        this.world = new particle_scene_1.ParticleWorld(false, false);
         this.world.setContainer(this.elem.querySelector('.scene'));
         this.world.update();
     };

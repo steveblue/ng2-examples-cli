@@ -1,1 +1,49 @@
-:host{display:block}.scene,:host{position:absolute;top:0;width:100%;height:100%;padding:0;margin:0}.scene{display:none;z-index:100}.scene.visible{display:block}.copy{position:absolute;top:33%;left:50%;z-index:500;-webkit-transform:translateX(-50%) translateY(-50%);transform:translateX(-50%) translateY(-50%);webkit-font-smoothing:subpixel-antialiased;-webkit-backface-visibility:hidden;backface-visibility:hidden;padding-top:120px;padding-left:30px;z-index:1000}.copy.is--hidden{display:none}.copy input{margin-right:10px}.copy input,.copy ui-button{position:relative;float:left}.copy ui-button{width:80px}@media only screen and (min-device-width:375px) and (max-device-width:667px){.button{-webkit-transform:translateX(30px) translateY(40px);transform:translateX(30px) translateY(40px)}}@media only screen and (min-device-width:668px){.button{-webkit-transform:translateX(60px) translateY(80px);transform:translateX(60px) translateY(80px)}}
+:host {
+  position: absolute;
+  display: block;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0; }
+
+.scene {
+  display: none;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: 100; }
+  .scene.visible {
+    display: block; }
+
+.copy {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  z-index: 500;
+  transform: translateX(-50%) translateY(-50%);
+  webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: hidden;
+  padding-top: 120px;
+  padding-left: 30px;
+  z-index: 1000; }
+  .copy.is--hidden {
+    display: none; }
+  .copy input {
+    margin-right: 10px; }
+  .copy input, .copy ui-button {
+    position: relative;
+    float: left; }
+  .copy ui-button {
+    width: 80px; }
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+  .button {
+    transform: translateX(30px) translateY(40px); } }
+
+@media only screen and (min-device-width: 668px) {
+  .button {
+    transform: translateX(60px) translateY(80px); } }
