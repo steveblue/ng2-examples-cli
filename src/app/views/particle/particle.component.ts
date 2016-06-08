@@ -18,12 +18,11 @@ export class ParticleComponent implements OnInit {
   constructor(private _ref: ChangeDetectorRef, private _el: ElementRef) {
     this.ref = _ref;
     this.elem = _el.nativeElement;
-    this.world = new ParticleWorld(false, false);
-    
   }
 
   ngOnInit() {
     
+     this.world = new ParticleWorld(false, false);
      this.world.setContainer(this.elem.querySelector('.scene'));
      this.world.update();
      

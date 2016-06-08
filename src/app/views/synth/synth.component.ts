@@ -2,7 +2,7 @@ import config from '../../conf';
 import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
-import { TerrainWorld } from '../../scene/terrain.scene';
+import { Synth } from '../../scene/synth.scene';
 import { ButtonComponent } from '../../components/button/button.component';
 
 declare let module: any;
@@ -10,13 +10,13 @@ declare let module: any;
 @Component({
   selector: 'view',
   moduleId: module.id,
-  templateUrl: 'remote-ui-demo.component.html',
-  styleUrls: ['remote-ui-demo.component.css'],
+  templateUrl: 'synth.component.html',
+  styleUrls: ['synth.component.css'],
   providers: [ FORM_PROVIDERS ],
   directives: [ FORM_DIRECTIVES, ButtonComponent ]
 })
 
-export class RemoteUIDemo implements OnInit {
+export class SynthComponent implements OnInit {
 
   copy: any;
   client: any;
@@ -44,7 +44,7 @@ export class RemoteUIDemo implements OnInit {
     this.toggleInvert = 1;
       
     this.copy = {
-      headline : 'Remote Terrain',
+      headline : 'Synth',
       line1: 'Visit /ui on a mobile device',
       line2: 'Use this code to connect the controller'
     };
@@ -54,15 +54,38 @@ export class RemoteUIDemo implements OnInit {
     this.form = _fb.group({
       'room': this.room
     });
-    
-    console.log(config);
 
   }
   ngOnInit() {
+
+    // TODO: internalize all arguments 
+    // TODO: make 1 argument with options
+    // TODO: figure out how to allow users to provide thier own html / css / js
+    // TODO: Hook up a gist
+    // TODO: make callback mandatory for messages in user's code
+
+    this.world = new Synth(this.elem.querySelector('video'), 
+                            true, 
+                            true,
+                            [{
+                              "camera": "0,-400,400",
+                              "shape": "plane",
+                              "detail": 1024,
+                              "scale" : 1.5,
+                              "wireframe": false,
+                              "multiplier": 5.0,
+                              "displace": 24.0,
+                              "origin": "0,0,-100",
+                              "opacity": 0.2,
+                              "hue": 0,
+                              "saturation": 0.75,
+                              "bgColor": "#000000"
+                          }]);
     
-    this.world = new TerrainWorld(true, false);
     this.world.setContainer(this.elem.querySelector('.scene'));
-     
+    this.world.defaultVideo('/assets/video/kinetic-light.mp4');
+    this.world.update();
+    
     this.form.valueChanges.subscribe((val) => {
          console.log(JSON.stringify(val));
          if(val.room.length === 5) {

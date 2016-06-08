@@ -3,10 +3,18 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
+  'firebase': 'vendor/firebase/lib/firebase-web.js',
+  'lib': 'lib'
 };
 
 /** User packages configuration. */
 const packages: any = {
+  'firebase' : { 
+      defaultExtension: 'js' 
+  },
+  'lib' : { 
+      defaultExtension: 'js' 
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,11 +35,14 @@ const barrels: string[] = [
   'rxjs',
   'three',
   'd3',
+  'firebase',
 
   // App specific barrels.
   'app',
   'app/components',
   'app/directives',
+  'app/models',
+  'app/schema',
   'app/services',
   'app/views'
   /** @cli-barrel */

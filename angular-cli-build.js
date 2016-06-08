@@ -50,7 +50,8 @@ module.exports = function(defaults) {
         'rxjs/**/*.+(js|js.map)',
         '@angular/**/*.+(js|js.map)',
         'd3/**/*.+(js|js.map)',
-        'three/**/*.+(js|js.map)'
+        'three/**/*.+(js|js.map)',
+        'firebase/lib/*.+(js|ts|js.map)'
       ]
     });
     
@@ -62,5 +63,5 @@ module.exports = function(defaults) {
     
     let css = compileCSS(sass, options);
 
-    return mergeTrees([appTree, sass, css], { overwrite: true });
+    return mergeTrees([sass, css, appTree], { overwrite: true });
 };
