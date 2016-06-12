@@ -1,6 +1,7 @@
 import { RuttEtraShader } from './rutt.shader';
 
 declare let THREE: any;
+declare let System: any;
 declare let navigator: any;
 
 export class Synth {
@@ -514,15 +515,19 @@ export class Synth {
   }
      
   onResize() {
+
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.composer.reset();
+
   }
   
   onDocumentMouseMove( event : any ) {
+
     this.mouseX = (event.clientX - this.windowHalfX);
     this.mouseY = (event.clientY - this.windowHalfY) * 0.3;
+    
   }
 
   setContainer( elem: any ) {
