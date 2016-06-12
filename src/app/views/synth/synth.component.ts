@@ -1,4 +1,3 @@
-import config from '../../conf';
 import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
@@ -33,7 +32,8 @@ export class SynthComponent implements OnInit {
   
   constructor(private _ref: ChangeDetectorRef,
               private _el: ElementRef,
-              private _fb: FormBuilder ) {
+              private _fb: FormBuilder,
+              private _dataChannel: DataChannel ) {
 
     this.ref = _ref;
     this.elem = _el.nativeElement;
@@ -48,12 +48,17 @@ export class SynthComponent implements OnInit {
       line1: 'Visit /ui on a mobile device',
       line2: 'Use this code to connect the controller'
     };
+
+    this.client = _dataChannel;
     
-    this.room = new Control(config.room);
+    
+    this.room = new Control(_dataChannel.config.room);
     
     this.form = _fb.group({
       'room': this.room
     });
+
+    this.onSubscribe();
 
   }
   ngOnInit() {
@@ -164,27 +169,32 @@ export class SynthComponent implements OnInit {
 
     if(!this.isConnected) {
         
-      this.client = new DataChannel(config.room, config.username, config.server);
+      this.client.room = this.room.value;
+      this.client.sendAnnounce();
       this.isConnecting = true;
 
-      this.client.emitter.subscribe((message)=>{
-
-        if(message === 'open') {
-          this.isConnected = true;
-          this.isConnecting = false;
-          this.client.observer.subscribe((res)=>{
-         
-            let msg = res[res.length-1].data; 
-            console.log(msg);
-            this.updateMessages(msg);
-            
-          });
-          this.ref.detectChanges();
-        }
-
-      });
 
     }
+
+  }
+  onSubscribe() {
+
+    this.client.emitter.subscribe((message)=>{
+
+      if(message === 'open') {
+        this.isConnected = true;
+        this.isConnecting = false;
+        this.client.observer.subscribe((res)=>{
+        
+          let msg = res[res.length-1].data; 
+          console.log(msg);
+          this.updateMessages(msg);
+          
+        });
+        this.ref.detectChanges();
+      }
+
+    });
 
   }
 }

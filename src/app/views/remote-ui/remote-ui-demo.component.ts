@@ -1,4 +1,3 @@
-import config from '../../conf';
 import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
@@ -33,7 +32,8 @@ export class RemoteUIDemo implements OnInit {
   
   constructor(private _ref: ChangeDetectorRef,
               private _el: ElementRef,
-              private _fb: FormBuilder ) {
+              private _fb: FormBuilder,
+              private _dataChannel: DataChannel ) {
 
     this.ref = _ref;
     this.elem = _el.nativeElement;
@@ -48,14 +48,16 @@ export class RemoteUIDemo implements OnInit {
       line1: 'Visit /ui on a mobile device',
       line2: 'Use this code to connect the controller'
     };
+
+    this.client = _dataChannel;
     
-    this.room = new Control(config.room);
+    this.room = new Control(_dataChannel.config.room);
     
     this.form = _fb.group({
       'room': this.room
     });
-    
-    console.log(config);
+
+    this.onSubscribe();
 
   }
   ngOnInit() {
@@ -139,12 +141,18 @@ export class RemoteUIDemo implements OnInit {
   }
   onClick() {
 
-    if(!this.isConnected) {
-        
-      this.client = new DataChannel(config.room, config.username, config.server);
-      this.isConnecting = true;
+    if(!this.isConnected && !this.client.isOpen) {
 
-      this.client.emitter.subscribe((message)=>{
+      this.client.room = this.room.value;
+      this.client.sendAnnounce();
+      this.isConnecting = true;
+  
+    }
+
+  }
+  onSubscribe() {
+
+    this.client.emitter.subscribe((message)=>{
 
         if(message === 'open') {
           this.isConnected = true;
@@ -159,9 +167,7 @@ export class RemoteUIDemo implements OnInit {
           this.ref.detectChanges();
         }
 
-      });
-
-    }
+    });
 
   }
 }

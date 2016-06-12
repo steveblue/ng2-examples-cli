@@ -4,6 +4,9 @@ import { HTTP_PROVIDERS } from '@angular/http';
 import { ROUTER_PROVIDERS, ROUTER_DIRECTIVES, Router, Routes } from '@angular/router';
 //import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+
+import { DataChannel } from './services/data-channel';
+
 import { Default } from './views/default/default.component';
 import { About } from './views/about/about.component';
 import { MusicPlayer } from './views/music-player/music-player.component';
@@ -27,6 +30,7 @@ declare let module: any;
     </div>
    `,
    directives : [ROUTER_DIRECTIVES, GlobalNav],
+   providers: [DataChannel],
    moduleId: module.id,
    styleUrls: ['app.component.css']
 })
@@ -45,5 +49,6 @@ declare let module: any;
 export class AppComponent {
   constructor(router: Router) {
     //console.log(router);
+    
   }
 }

@@ -1,3 +1,4 @@
+import config from '../conf';
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
@@ -5,11 +6,31 @@ import 'rxjs/add/operator/share';
 
 declare let Firebase:any;
 
+let uuid = function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+};
+
+let defaultRoom = function() {
+
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( let i=0; i < 5; i++ ) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+
+};
+
 @Injectable()
 export class DataChannel {
 
   public id: string;
-  public key: string;
+  public room: string;
   public name: string;
   public conf: any;
   public db: any;
@@ -29,18 +50,19 @@ export class DataChannel {
   public debug : boolean;
   public isWebSocket: boolean;
   public count : number;
+  public config : any;
   public store : {
     messages: any
   };
 
-  constructor(private _key: string,
-              private _id: string,
-              private _url: string) {
+  constructor() {
 
     var self = this;
-    this.id = _id || Math.random().toString().replace('.', ''); // the username, unique id that makes each peer => make uuid?
-    this.key = _key || '1234'; // the room name.
-    this.url = _url; // replace with your server name
+
+    this.config = config;
+    this.id = this.config.username || uuid(); // the username, unique id that makes each peer => make uuid?
+    this.room = this.config.room || defaultRoom(); // the room name.
+    this.url = this.config.server || 'https://your-name-here.firebaseio.com/'; // replace with your server name
     this.name = 'channel'; // the name of the channel
     this.db = new Firebase(this.url); // only supports Firebase for now, support for custom web socket server in the future.
     this.count = 0;
@@ -50,7 +72,7 @@ export class DataChannel {
     this.connections = {};
     this.remotePeer = null;
     this.isWebSocket = false;
-    this.debug = false;
+    this.debug = true;
     
 
     this.store = { messages: [] };
@@ -78,7 +100,9 @@ export class DataChannel {
     this.emitter = new EventEmitter();
     this.observer = new Observable( observer => this.channelObserver = observer ).share();
 
-    this.sendAnnounce();
+
+
+    // this.sendAnnounce();
 
   }
 
@@ -87,7 +111,7 @@ export class DataChannel {
     var RTCPeerConnection =  (<any>window).RTCPeerConnection ||  (<any>window).mozRTCPeerConnection ||
                       (<any>window).webkitRTCPeerConnection;
     var msg = {
-        sharedKey: this.key,
+        sharedKey: this.room,
         id: this.id,
         method: !RTCPeerConnection ? 'socket' : 'webrtc'
       };
@@ -98,7 +122,7 @@ export class DataChannel {
                        
     this.channels.announce.remove(()=>{
       this.channels.announce.push(msg);
-      if(this.debug) console.log('Announced our sharedKey is ' + this.key);
+      if(this.debug) console.log('Announced our sharedKey is ' + this.room);
       if(this.debug) console.log('Announced our ID is ' + this.id);
     });
  
@@ -107,7 +131,7 @@ export class DataChannel {
   onAnnounce(snapshot) {
     
     var msg = snapshot.val();
-    if (msg.id != this.id && msg.sharedKey == this.key) {
+    if (msg.id != this.id && msg.sharedKey == this.room) {
       
       if(this.debug) console.log('Discovered matching announcement from ' + msg.id);
       this.remotePeer = msg.id;
@@ -118,7 +142,7 @@ export class DataChannel {
       } else {
         this.sendSignal({
           id: this.id,
-          key: this.key,
+          key: this.room,
           url: this.url,
           type: 'ws-offer'
         });

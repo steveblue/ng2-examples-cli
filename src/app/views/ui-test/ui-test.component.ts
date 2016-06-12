@@ -1,4 +1,3 @@
-import config from '../../conf';
 import { Component, OnInit, EventEmitter, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
@@ -36,7 +35,8 @@ export class UIComponentTest implements OnInit {
   
   constructor(private _el: ElementRef, 
               private _ref: ChangeDetectorRef,
-              private _fb: FormBuilder) {
+              private _fb: FormBuilder,
+              private _dataChannel: DataChannel) {
     
     this.elem = _el.nativeElement;
     this.ref = _ref;
@@ -44,7 +44,8 @@ export class UIComponentTest implements OnInit {
     this.isConnected = false;
     this.isConnecting = false;
     this.isButtonDisabled = true;
-    
+
+    this.client = _dataChannel;
     
     this.room = new Control('');
     
@@ -99,8 +100,7 @@ export class UIComponentTest implements OnInit {
         x: (14*2) + 200 + 'px',
         y: window.innerHeight - 214 + 'px'
     };
-    
-    console.log(config);
+  
     
     
   }
@@ -161,7 +161,9 @@ export class UIComponentTest implements OnInit {
  
     if(!this.isConnected && !this.isButtonDisabled) {
 
-      this.client = new DataChannel(this.room.value, config.username, config.server);
+      this.client.room = this.room.value;
+      this.client.sendAnnounce();
+
       this.isConnecting = true;
       
       this.client.emitter.subscribe((message)=>{

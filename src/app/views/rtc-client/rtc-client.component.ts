@@ -1,7 +1,15 @@
 import config from '../../conf';
-import { Component, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { NgClass } from '@angular/common';
-import { DataChannel } from '../../services/data-channel';
+import {
+  Component,
+  ChangeDetectorRef,
+  ElementRef
+} from '@angular/core';
+import {
+  NgClass
+} from '@angular/common';
+import {
+  DataChannel
+} from '../../services/data-channel';
 
 
 declare let module: any;
@@ -27,18 +35,19 @@ declare let module: any;
     </li>
   </ul>
   `,
-  styleUrls: ['rtc-client.component.css']
+  styleUrls: ['rtc-client.component.css'],
+  providers: [DataChannel]
 })
 
 export class DataChannelClient {
   headline: string;
   copy: string;
-  client: any;
   messages: string[];
   isConnected: boolean;
+  client: any;
   ref: ChangeDetectorRef;
   elem: any;
-  constructor(private _ref: ChangeDetectorRef, private _el: ElementRef) {
+  constructor(private _ref: ChangeDetectorRef, private _el: ElementRef, private _dataChannel: DataChannel) {
 
     this.headline = 'DataChannel';
     this.copy = 'WebRTC DataChannels allow for fast peer to peer communication. This example creates a channel, gives the client a unique identifier (i.e. username), and establishes the connection. Firebase is used for signaling. Once the connection is established, the keyCode for whatever key is typed will appear in the remote UI. Open two windows of Chrome or Firefox to test DataChannel. This service will fallback to WebSocket connection via Firebase if the peer cannot support PeerConnection. A demo featuring first person controls in a WebGL scene is in the remote section.';
@@ -46,51 +55,54 @@ export class DataChannelClient {
     this.ref = _ref;
     this.elem = _el.nativeElement;
     this.isConnected = false;
-
-    console.log(config);
+    this.messages = [];
+    
+    this.client = _dataChannel;
+    
+    this.onSubscribe();
 
   }
   onKeyDown(ev) {
-    
+
     let msg = JSON.stringify({
       val: ev.keyCode
     });
-   
+
     this.client.channel.send(msg);
 
-    if(ev.keyCode === 13) {
+    if (ev.keyCode === 13) {
       ev.target.value = '';
     }
 
   }
   updateMessages(message: string) {
-    if(this.messages.length > 24) this.messages = [];
+    if (this.messages.length > 24) this.messages = [];
     this.ref.detectChanges();
   }
   onClick() {
 
-    if(!this.isConnected) {
-
-      this.client = new DataChannel(config.room, config.username, config.server);
+    if (!this.isConnected) {
 
       this.messages = [];
 
-      this.client.emitter.subscribe((message)=>{
-
-        if(message === 'open') {
-          this.isConnected = true;
-          this.elem.querySelector('input').focus();
-          this.client.observer.subscribe((res)=>{
-            let data = res[res.length-1]; 
-            console.log(data);
-            this.messages.push(data);
-            this.updateMessages(message);
-          });
-        }
-
-      });
-
     }
 
+  }
+  onSubscribe() {
+
+    this.client.emitter.subscribe((message) => {
+
+      if (message === 'open') {
+        this.isConnected = true;
+        this.elem.querySelector('input').focus();
+        this.client.observer.subscribe((res) => {
+          let data = res[res.length - 1];
+          console.log(data);
+          this.messages.push(data);
+          this.updateMessages(message);
+        });
+      }
+
+    });
   }
 }

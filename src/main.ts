@@ -5,11 +5,14 @@ import { ROUTER_PROVIDERS } from '@angular/router';
 import { FORM_PROVIDERS } from '@angular/common';
 import { AppComponent, environment } from './app/';
 
+import { DataChannel } from './app/services/data-channel';
+
 if (environment.production) {
   enableProdMode();
 }
 
 bootstrap(AppComponent, [
+  DataChannel,
   ROUTER_PROVIDERS,
   HTTP_PROVIDERS,
   FORM_PROVIDERS
