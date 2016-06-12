@@ -1,14 +1,22 @@
-import { Injectable, Inject, EventEmitter } from '@angular/core';
-import { Http } from '@angular/http';
-import { Media } from '../schema/media';
+import {
+  Injectable,
+  Inject,
+  EventEmitter
+} from '@angular/core';
+import {
+  Http
+} from '@angular/http';
+import {
+  Media
+} from '../schema/media';
 import 'rxjs/add/operator/map';
 
 let emitter = new EventEmitter();
 
 @Injectable()
-export class MediaService {
-  
-  emitter: EventEmitter<any>;
+export class AudioService {
+
+  emitter: EventEmitter < any > ;
   ctx: AudioContext;
   analyzer: AnalyserNode;
   processor: ScriptProcessorNode;
@@ -16,6 +24,7 @@ export class MediaService {
   freqData: Uint8Array;
 
   constructor(public http: Http, @Inject('audioContext') private context) {
+
     this.http = http;
     this.emitter = emitter;
     this.ctx = context;
@@ -24,37 +33,37 @@ export class MediaService {
     this.processor.connect(this.ctx.destination);
     this.analyzer.connect(this.processor);
     this.freqData = new Uint8Array(this.analyzer.frequencyBinCount);
-    console.log(this.ctx);
+    
   }
 
   get() {
 
     return this.http.get('/app/models/media.json')
-    .map((responseData) => {
+      .map((responseData) => {
 
-      return responseData.json().media;
+        return responseData.json().media;
 
-    })
-    .map((media: Array<any>) => {
+      })
+      .map((media: Array < any > ) => {
 
-      let result: Array<Media> = [];
+        let result: Array < Media > = [];
 
-      if (media) {
+        if (media) {
 
-        media.forEach((media) => {
-          result.push(
-            new Media(media.artist,
-              media.title,
-              media.url,
-              media.imageUrl,
-              media.index));
-        });
+          media.forEach((media) => {
+            result.push(
+              new Media(media.artist,
+                media.title,
+                media.url,
+                media.imageUrl,
+                media.index));
+          });
 
-      }
+        }
 
-      return result;
+        return result;
 
-    });
+      });
   }
 
   process() {
@@ -63,7 +72,7 @@ export class MediaService {
       let array = [];
 
       for (let i = 0; i < uint8Array.byteLength; i++) {
-          array[i] = uint8Array[i];
+        array[i] = uint8Array[i];
       }
 
       return array;
@@ -71,8 +80,8 @@ export class MediaService {
 
     this.processor.onaudioprocess = (e) => {
 
-        this.analyzer.getByteFrequencyData(this.freqData);
-        this.setFrequencyData(uint8ArrayToArray(this.freqData));
+      this.analyzer.getByteFrequencyData(this.freqData);
+      this.setFrequencyData(uint8ArrayToArray(this.freqData));
 
     };
 

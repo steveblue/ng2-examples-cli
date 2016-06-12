@@ -8,7 +8,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import {
-  MediaService
+  AudioService
 } from '../../services/media-service';
 import {
   Meter
@@ -28,7 +28,7 @@ declare let module: any;
 export class WaveformComponent implements OnInit {
 
   elem: any;
-  mediaService: MediaService;
+  audioService: AudioService;
   width: number;
   height: number;
   color: string;
@@ -43,10 +43,10 @@ export class WaveformComponent implements OnInit {
 
   @Output() path: any;
 
-  constructor(mediaService: MediaService, ref: ChangeDetectorRef, elem: ElementRef) {
+  constructor(audioService: AudioService, ref: ChangeDetectorRef, elem: ElementRef) {
 
     this.init = false;
-    this.mediaService = mediaService;
+    this.audioService = audioService;
     this.elem = elem;
     this.ref = ref;
     this.color = '#8DE969';
@@ -74,7 +74,7 @@ export class WaveformComponent implements OnInit {
 
     this.shape = this.elem.nativeElement.getElementsByClassName('levels')[0];
 
-    this.mediaService.emitter.subscribe((res) => {
+    this.audioService.emitter.subscribe((res) => {
 
       this.data = res;
       res.unshift(0);
@@ -112,7 +112,7 @@ export class WaveformComponent implements OnInit {
   }
 
   // ngOnDestroy() {
-  //   this.mediaService.emitter.unsubscribe();
+  //   this.audioService.emitter.unsubscribe();
   // }
 
   onMouseMove(ev) {

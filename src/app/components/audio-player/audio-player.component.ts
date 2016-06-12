@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { MediaService } from '../../services/media-service';
+import { AudioService } from '../../services/media-service';
 import { WaveformComponent } from '../waveform/waveform.component';
 
 declare let module: any;
@@ -27,24 +27,24 @@ export class AudioPlayer implements OnInit, OnDestroy {
   elem: HTMLElement;
   audioElem: any;
   sourceNode: MediaElementAudioSourceNode;
-  mediaService: MediaService;
+  audioService: AudioService;
 
   @Input() url: string;
   @Input() control: any;
   @Output() onended: any;
   @Output() controls: any;
 
-  constructor(elem: ElementRef, mediaService: MediaService) {
+  constructor(elem: ElementRef, audioService: AudioService) {
      this.elem = elem.nativeElement;
-     this.mediaService = mediaService;
+     this.audioService = audioService;
      this.onended = new EventEmitter();
   }
 
   ngOnInit() {
 
     this.audioElem = this.elem.querySelector('audio');
-    this.sourceNode = this.mediaService.ctx.createMediaElementSource(this.audioElem);
-    this.mediaService.connect(this.sourceNode);
+    this.sourceNode = this.audioService.ctx.createMediaElementSource(this.audioElem);
+    this.audioService.connect(this.sourceNode);
 
     this.control.subscribe((control)=>{
       if(control.action === 'play') {
@@ -62,19 +62,19 @@ export class AudioPlayer implements OnInit, OnDestroy {
     // this.processor.onaudioprocess = function() {};
     // this.sourceNode.disconnect();
     // this.sourceNode = null;
-    this.mediaService.destroy();
+    this.audioService.destroy();
 
   }
 
   onPlay(ev) {
 
-    this.mediaService.process();
+    this.audioService.process();
 
   }
 
   onTrackEnded(ev) {
 
-    this.mediaService.stop();
+    this.audioService.stop();
     this.onended.emit();
 
   }

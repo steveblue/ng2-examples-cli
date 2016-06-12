@@ -1,5 +1,5 @@
 import { Component, provide, OnInit, EventEmitter } from '@angular/core';
-import { MediaService } from '../../services/media-service';
+import { AudioService } from '../../services/media-service';
 import { Media } from "../../schema/media";
 import { TrackList } from "../../components/track-list/track-list.component";
 import { AudioPlayer } from "../../components/audio-player/audio-player.component";
@@ -29,7 +29,7 @@ declare let module: any;
 `,
  styleUrls: ['music-player.component.css'],
  directives: [TrackList, AudioPlayer],
- providers: [MediaService, provide('audioContext', {useValue: new (window['AudioContext'] || window['webkitAudioContext'])})]
+ providers: [AudioService, provide('audioContext', {useValue: new (window['AudioContext'] || window['webkitAudioContext'])})]
 })
 
 export class MusicPlayer implements OnInit {
@@ -39,14 +39,14 @@ export class MusicPlayer implements OnInit {
   controller: EventEmitter<any>;
   currentTrack: any;
   
-  constructor(public mediaService: MediaService) {
+  constructor(public audioService: AudioService) {
 
     this.playhead = 0;
     this.currentTrack = {};
     
     this.controller = new EventEmitter();
 
-    mediaService.get().subscribe(res => {
+    audioService.get().subscribe(res => {
       this.tracks = res;
       this.currentTrack = this.tracks[this.playhead];
     });
