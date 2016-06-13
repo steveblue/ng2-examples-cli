@@ -9,24 +9,32 @@ import {
 import {
   Media
 } from '../schema/media';
+import { 
+  DataChannel 
+} from '../services/data-channel';
 import 'rxjs/add/operator/map';
+
 
 let emitter = new EventEmitter();
 
 @Injectable()
 export class AudioService {
 
-  emitter: EventEmitter < any > ;
+  emitter: EventEmitter < any >;
+  client: any;
   ctx: AudioContext;
   analyzer: AnalyserNode;
   processor: ScriptProcessorNode;
   sourceNode: MediaElementAudioSourceNode;
   freqData: Uint8Array;
 
-  constructor(public http: Http, @Inject('audioContext') private context) {
+  constructor(public http: Http, 
+              private _dataChannel: DataChannel,
+              @Inject('audioContext') private context) {
 
     this.http = http;
     this.emitter = emitter;
+    this.client = _dataChannel; 
     this.ctx = context;
     this.analyzer = this.ctx.createAnalyser();
     this.processor = this.ctx.createScriptProcessor(1024);
@@ -38,7 +46,7 @@ export class AudioService {
 
   get() {
 
-    return this.http.get('/app/models/media.json')
+    return this.http.get('/app/models/media.json') // TODO: Get path from imput or config
       .map((responseData) => {
 
         return responseData.json().media;
@@ -111,6 +119,13 @@ export class AudioService {
 
   setFrequencyData(data) {
     emitter.next(data);
+    if(this.client && this.client.isOpen) {
+      let msg = JSON.stringify({
+        currentValue: data,
+        control: 'waveform'
+      });
+      this.client.channel.send(msg);
+    }
   }
 
 }

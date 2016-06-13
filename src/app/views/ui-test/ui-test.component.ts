@@ -3,8 +3,12 @@ import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIREC
 import { ButtonComponent } from '../../components/button/button.component';
 import { ToggleComponent } from '../../components/toggle/toggle.component';
 import { SliderComponent } from '../../components/slider/slider.component';
+import { WaveformComponent } from '../../components/waveform/waveform.component';
 import { DataChannel } from '../../services/data-channel';
-
+import { AudioService } from '../../services/media-service';
+import { TrackList } from "../../components/track-list/track-list.component";
+import { AudioPlayer } from "../../components/audio-player/audio-player.component";
+import { Media } from "../../schema/media";
 declare let module: any;
 
 @Component({
@@ -12,8 +16,8 @@ declare let module: any;
   moduleId: module.id,
   templateUrl: 'ui-test.component.html',
   styleUrls: ['ui-test.component.css'],
-  providers: [ FORM_PROVIDERS ],
-  directives: [ FORM_DIRECTIVES, SliderComponent, ButtonComponent, ToggleComponent ],
+  providers: [ FORM_PROVIDERS, AudioService ],
+  directives: [ FORM_DIRECTIVES, SliderComponent, ButtonComponent, ToggleComponent, WaveformComponent, TrackList, AudioPlayer ],
 })
 
 export class UIComponentTest implements OnInit {
@@ -32,7 +36,12 @@ export class UIComponentTest implements OnInit {
   room: Control;
   elem: any;
   ref: any;
-  
+  controller: EventEmitter<any>;
+  message: string;
+  tracks: Media[];
+  playhead: number;
+  currentTrack: any;
+  audiocontrol: EventEmitter<any>;
   constructor(private _el: ElementRef, 
               private _ref: ChangeDetectorRef,
               private _fb: FormBuilder,
@@ -57,7 +66,12 @@ export class UIComponentTest implements OnInit {
       headline : 'Remote Control',
       line1: 'Visit /remote on desktop computer to get code'
     };
+
+    this.playhead = 0;
+    this.currentTrack = {};
     
+    this.controller = new EventEmitter();
+    this.audiocontrol = new EventEmitter();
     
     this.toggleOptions = {
         isActive: false,
@@ -109,7 +123,7 @@ export class UIComponentTest implements OnInit {
     // this.client is undefined!
     
       this.form.valueChanges.subscribe((val) => {
-          console.log(JSON.stringify(val));
+     
          if(val.room.length === 5) {
            this.isButtonDisabled = false;
          } else {
@@ -165,6 +179,8 @@ export class UIComponentTest implements OnInit {
       this.client.sendAnnounce();
 
       this.isConnecting = true;
+
+
       
       this.client.emitter.subscribe((message)=>{
         console.log('hello!', message);
@@ -174,7 +190,18 @@ export class UIComponentTest implements OnInit {
           this.isConnecting = false;
           this.client.observer.subscribe((res)=>{
 
-            console.log(res);
+            let msg = res[res.length-1].data;
+
+            if(msg.control === 'tracklist') {
+                this.tracks = msg.tracks;
+                this.currentTrack = this.tracks[this.playhead];
+            }
+          
+
+            if(msg.control === 'waveform') {
+                this.controller.emit(msg.currentValue);
+            }
+          
             
           });
           
@@ -199,6 +226,82 @@ export class UIComponentTest implements OnInit {
          this.client.channel.send(msg);
       }
       
+  }
+
+  onTrackSelected(track: Media): void {
+    
+    this.playhead = this.tracks.indexOf(track);
+    this.currentTrack = this.tracks[this.playhead];
+
+    let msg = JSON.stringify({
+        action: 'play',
+        control: 'player',
+        playhead : this.playhead,
+        track: this.currentTrack
+      });
+
+    if(this.client && this.client.channel) {
+      this.client.channel.send(msg);
+       this.controller.emit({
+          action: 'play',
+          track: this.currentTrack
+        });
+    } else {
+        this.controller.emit({
+          action: 'play',
+          track: this.currentTrack
+        });
+    }
+
+ 
+    
+  }
+  prevTrack() {
+    
+    this.playhead = this.tracks.indexOf(this.currentTrack);
+    this.playhead--;
+    this.currentTrack = this.tracks[this.playhead];
+
+    let msg = JSON.stringify({
+        action: 'prev',
+        control: 'player',
+        playhead : this.playhead,
+        track: this.currentTrack
+      });
+      
+    if(this.client && this.client.channel) {
+      this.client.channel.send(msg);
+    } else {
+      this.controller.emit({
+        action: 'play',
+        track: this.currentTrack
+      });
+    }
+    
+  }
+  nextTrack() {
+    
+    this.playhead = this.tracks.indexOf(this.currentTrack);
+    this.playhead++;
+    this.currentTrack = this.tracks[this.playhead];
+    
+
+    let msg = JSON.stringify({
+        action: 'next',
+        control: 'player',
+        playhead : this.playhead,
+        track: this.currentTrack
+      });
+      
+    if(this.client && this.client.channel) {
+      this.client.channel.send(msg);
+    } else {
+      this.controller.emit({
+        action: 'play',
+        track: this.currentTrack
+      });
+    }
+
   }
   
 }

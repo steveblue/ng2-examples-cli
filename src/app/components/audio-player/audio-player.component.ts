@@ -7,17 +7,10 @@ declare let module: any;
 
 @Component({
 selector: 'audio-player',
-template: `
-  <audio controls src="{{url}}" type="audio/mpeg"
-  (play)="onPlay($event)"
-  (ended)="onTrackEnded($event)">
-  </audio>
-  <waveform-monitor></waveform-monitor>
-`,
 directives: [WaveformComponent],
 moduleId: module.id,
+templateUrl: 'audio-player.component.html',
 styleUrls: ['audio-player.component.css']
-
 })
 
 export class AudioPlayer implements OnInit, OnDestroy {

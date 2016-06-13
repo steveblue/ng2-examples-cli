@@ -15,6 +15,24 @@
      </form>
   </header>
 
+<div class="music__player">
   
+    <audio-player
+      [url]="currentTrack.url"
+      [control]="controller"
+      (onended)="nextTrack()">
+    </audio-player>
+    
+    <track-list
+      [trackList]="tracks"
+      [control]="controller"
+      (onselect)="onTrackSelected($event)">
+    </track-list>
+
+
+
+  </div>
+
+
   <div class="scene"></div>
   <video autoplay ></video>

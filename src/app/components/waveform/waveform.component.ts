@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  Input,
   Output,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,6 +11,9 @@ import {
 import {
   AudioService
 } from '../../services/media-service';
+import {
+  DataChannel
+} from '../../services/data-channel';
 import {
   Meter
 } from '../../models/meter';
@@ -39,12 +43,17 @@ export class WaveformComponent implements OnInit {
   init: boolean;
   isVisible: boolean;
   ref: ChangeDetectorRef;
+  hasRemoteConnection: boolean;
   controls: EventEmitter < any > ;
 
+  @Input('control') control: any; 
   @Output() path: any;
 
-  constructor(audioService: AudioService, ref: ChangeDetectorRef, elem: ElementRef) {
-
+  constructor(audioService: AudioService, 
+              _dataChannel: DataChannel, 
+              ref: ChangeDetectorRef,
+              elem: ElementRef) {
+    console.log('waveform');
     this.init = false;
     this.audioService = audioService;
     this.elem = elem;
@@ -59,26 +68,19 @@ export class WaveformComponent implements OnInit {
     this.controls = new EventEmitter();
   }
 
-  ngOnInit() {
+  onUpdate(res: any) {
 
-    var x = d3.scale.linear().domain([0, 512]).range([0, window.innerWidth]),
-      y = d3.scale.linear().domain([0, 255]).range([this.height, 0]),
-      line = d3.svg.line()
-      .interpolate('basis')
-      .x(function(d, i) {
-        return x(i);
-      })
-      .y(function(d, i) {
-        return y(d);
-      });
+      let x = d3.scale.linear().domain([0, 512]).range([0, window.innerWidth]),
+          y = d3.scale.linear().domain([0, 255]).range([this.height, 0]),
+          line = d3.svg.line()
+                  .interpolate('basis')
+                  .x(function(d, i) {
+                    return x(i);
+                  })
+                  .y(function(d, i) {
+                    return y(d);
+                  });
 
-    this.shape = this.elem.nativeElement.getElementsByClassName('levels')[0];
-
-    this.audioService.emitter.subscribe((res) => {
-
-      this.data = res;
-      res.unshift(0);
-      res.push(0);
 
       this.path = line(res);
 
@@ -99,15 +101,37 @@ export class WaveformComponent implements OnInit {
         this.ref.detectChanges();
 
       }
+  }
+
+  ngOnInit() {
 
 
-      //console.log(this.meters[0].val);
+    this.shape = this.elem.nativeElement.getElementsByClassName('levels')[0];
 
+    this.control.subscribe((res)=>{
 
+      if(res.constructor.name === 'Array') {
+        this.hasRemoteConnection = true;
+        this.data = res;
+
+        res.unshift(0);
+        res.push(0);
+
+        this.onUpdate(res);
+      }
 
     });
 
 
+    this.audioService.emitter.subscribe((res) => {
+      if(!this.hasRemoteConnection) {
+        this.data = res;
+        res.unshift(0);
+        res.push(0);
+
+        this.onUpdate(res);
+      }
+    });
 
   }
 

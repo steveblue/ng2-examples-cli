@@ -1,8 +1,12 @@
-import { Component, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
+import { Component, provide, ChangeDetectorRef, ElementRef, OnInit, EventEmitter } from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
 import { Synth } from '../../scene/synth.scene';
 import { ButtonComponent } from '../../components/button/button.component';
+import { Media } from "../../schema/media";
+import { TrackList } from "../../components/track-list/track-list.component";
+import { AudioPlayer } from "../../components/audio-player/audio-player.component";
+import { AudioService } from '../../services/media-service';
 
 declare let module: any;
 
@@ -11,8 +15,8 @@ declare let module: any;
   moduleId: module.id,
   templateUrl: 'synth.component.html',
   styleUrls: ['synth.component.css'],
-  providers: [ FORM_PROVIDERS ],
-  directives: [ FORM_DIRECTIVES, ButtonComponent ]
+  directives: [ FORM_DIRECTIVES, ButtonComponent, TrackList, AudioPlayer ],
+  providers: [FORM_PROVIDERS, AudioService, provide('audioContext', {useValue: new (window['AudioContext'] || window['webkitAudioContext'])})]
 })
 
 export class SynthComponent implements OnInit {
@@ -29,11 +33,17 @@ export class SynthComponent implements OnInit {
   ref: ChangeDetectorRef;
   elem: any;
   world: any;
+  message: string;
+  tracks: Media[];
+  playhead: number;
+  controller: EventEmitter<any>;
+  currentTrack: any;
   
   constructor(private _ref: ChangeDetectorRef,
               private _el: ElementRef,
               private _fb: FormBuilder,
-              private _dataChannel: DataChannel ) {
+              private _dataChannel: DataChannel,
+              public audioService: AudioService ) {
 
     this.ref = _ref;
     this.elem = _el.nativeElement;
@@ -42,6 +52,19 @@ export class SynthComponent implements OnInit {
     this.isConnecting = false;
     this.isButtonDisabled = true;
     this.toggleInvert = 1;
+
+    // audio 
+
+    this.playhead = 0;
+    this.currentTrack = {};
+    
+    this.controller = new EventEmitter();
+
+    audioService.get().subscribe(res => {
+      this.tracks = res;
+      this.currentTrack = this.tracks[this.playhead];
+    });
+
       
     this.copy = {
       headline : 'Synth',
@@ -57,6 +80,7 @@ export class SynthComponent implements OnInit {
     this.form = _fb.group({
       'room': this.room
     });
+
 
     this.onSubscribe();
 
@@ -101,6 +125,41 @@ export class SynthComponent implements OnInit {
     });
     
   }
+  onTrackSelected(track: Media): void {
+    
+    this.playhead = this.tracks.indexOf(track);
+    this.currentTrack = this.tracks[this.playhead];
+
+    this.controller.emit({
+      action: 'play',
+      track: this.currentTrack
+    });
+    
+  }
+  prevTrack() {
+    
+    this.playhead = this.tracks.indexOf(this.currentTrack);
+    this.playhead--;
+    this.currentTrack = this.tracks[this.playhead];
+    
+    this.controller.emit({
+      action: 'play',
+      track: this.currentTrack
+    });
+    
+  }
+  nextTrack() {
+    
+    this.playhead = this.tracks.indexOf(this.currentTrack);
+    this.playhead++;
+    this.currentTrack = this.tracks[this.playhead];
+    
+    this.controller.emit({
+      action: 'play',
+      track: this.currentTrack
+    });
+    
+  }
   onKeyDown(ev) {
     
 
@@ -108,6 +167,22 @@ export class SynthComponent implements OnInit {
   updateMessages(msg: any) {
     console.log(msg);
     let data : number[] = msg.currentValue;
+
+    if(msg.control === 'player') {
+        console.log(msg);
+        if(msg.action === 'play' ||
+           msg.action === 'prev' ||
+           msg.action === 'next') {
+           console.log(msg);
+           this.playhead = msg.playhead;
+           this.currentTrack = msg.track;
+           this.controller.emit({
+            action: msg.action,
+            track: msg.track
+          });
+
+        }
+      }
     
     if(msg.control === 'joyLeft') {
       if(data[0] < 0) {
@@ -184,6 +259,17 @@ export class SynthComponent implements OnInit {
       if(message === 'open') {
         this.isConnected = true;
         this.isConnecting = false;
+
+        let msg = JSON.stringify({
+            tracks: this.tracks,
+            currentTrack: this.currentTrack,
+            control: 'tracklist'
+          });
+
+          if(this.client && this.client.channel) {
+            this.client.channel.send(msg);
+          }
+
         this.client.observer.subscribe((res)=>{
         
           let msg = res[res.length-1].data; 
@@ -191,7 +277,9 @@ export class SynthComponent implements OnInit {
           this.updateMessages(msg);
           
         });
+
         this.ref.detectChanges();
+
       }
 
     });

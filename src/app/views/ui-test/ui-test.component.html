@@ -27,3 +27,21 @@
 <slider [options]="joyOptions.left"></slider>
 <slider [options]="sliderOptions"></slider>
 <slider [options]="joyOptions.right"></slider>
+
+<div class="music__player">
+  
+    <!--<audio-player
+      [url]="currentTrack.url"
+      [control]="audiocontrol"
+      (onended)="nextTrack()">
+    </audio-player>
+    -->
+    <track-list
+      [trackList]="tracks"
+      [control]="audiocontrol"
+      (onselect)="onTrackSelected($event)">
+    </track-list>
+
+  </div>
+
+<waveform-monitor [control]="controller"></waveform-monitor>
