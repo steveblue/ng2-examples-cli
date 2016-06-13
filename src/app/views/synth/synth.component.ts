@@ -129,7 +129,7 @@ export class SynthComponent implements OnInit {
     
     this.playhead = this.tracks.indexOf(track);
     this.currentTrack = this.tracks[this.playhead];
-
+    console.log(this.currentTrack);
     this.controller.emit({
       action: 'play',
       track: this.currentTrack
@@ -160,26 +160,25 @@ export class SynthComponent implements OnInit {
     });
     
   }
-  onKeyDown(ev) {
-    
 
-  }
   updateMessages(msg: any) {
-    console.log(msg);
+
     let data : number[] = msg.currentValue;
 
     if(msg.control === 'player') {
-        console.log(msg);
+
         if(msg.action === 'play' ||
            msg.action === 'prev' ||
            msg.action === 'next') {
-           console.log(msg);
+
            this.playhead = msg.playhead;
            this.currentTrack = msg.track;
+
            this.controller.emit({
             action: msg.action,
             track: msg.track
           });
+          
 
         }
       }
@@ -187,47 +186,52 @@ export class SynthComponent implements OnInit {
     if(msg.control === 'joyLeft') {
       if(data[0] < 0) {
         console.log('left');
-        this.world.controls.moveLeft = true;
-        this.world.controls.moveRight = false;
+         this.world.camera.position.x--;
+        //this.world.controls.moveLeft = true;
+        //this.world.controls.moveRight = false;
+        
       } else {
-        this.world.controls.moveLeft = false;
+        //this.world.controls.moveLeft = false;
       }
 
       if(data[0] > 0) {
         console.log('right');
-        this.world.controls.moveLeft = false;
-        this.world.controls.moveRight = true;
+        this.world.camera.position.x++;
+        //this.world.controls.moveLeft = false;
+        //this.world.controls.moveRight = true;
       } else {
-        this.world.controls.moveRight = false;
+        //this.world.controls.moveRight = false;
       }
 
 
       if(data[1] > 0) {
         console.log('forward');
-        this.world.controls.moveForward = true;
-        this.world.controls.moveBackward = false;
+        this.world.camera.position.z++;
+        //this.world.controls.moveForward = true;
+        //this.world.controls.moveBackward = false;
       } else {
-        this.world.controls.moveForward = false;
+        //this.world.controls.moveForward = false;
       }
 
       if(data[1] < 0) {
+        this.world.camera.position.z--;
         console.log('backward');
-        this.world.controls.moveBackward = true;
-        this.world.controls.moveForward = false;
+       // this.world.controls.moveBackward = true;
+       // this.world.controls.moveForward = false;
       } else {
-        this.world.controls.moveBackward = false;
+        //this.world.controls.moveBackward = false;
       }
 
     }
     
     if(msg.control === 'joyRight') {
-        this.world.controls.mouseX = data[0];
-        this.world.controls.mouseY = data[1];
+       // this.world.controls.mouseX = data[0];
+       // this.world.controls.mouseY = data[1];
     }
     
     if(msg.control === 'slider') {
       
-      this.world.camera.position.y = msg.currentValue * this.toggleInvert;
+      this.world.multiply = msg.currentValue * this.toggleInvert;
       
     }
     
@@ -235,6 +239,12 @@ export class SynthComponent implements OnInit {
       
      this.toggleInvert = this.toggleInvert === 1 ? -1 : 1;
       
+    }
+
+    if(msg.control === 'meters') {
+      msg.currentValue.forEach(function(meter){
+        console.log(meter.val);
+      });
     }
     
     this.messages.push(msg);
@@ -266,14 +276,13 @@ export class SynthComponent implements OnInit {
             control: 'tracklist'
           });
 
-          if(this.client && this.client.channel) {
-            this.client.channel.send(msg);
-          }
+        if(this.client && this.client.channel) {
+          this.client.channel.send(msg);
+        }
 
         this.client.observer.subscribe((res)=>{
         
           let msg = res[res.length-1].data; 
-          console.log(msg);
           this.updateMessages(msg);
           
         });

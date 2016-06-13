@@ -53,6 +53,10 @@ input[type='text'] {
   background: rgba(0,0,0,0.5);  /* Gecko Browsers */
 }
 
+.is--hidden {
+  display: none; 
+}
+
 
 .loading__icon {
     display: block;

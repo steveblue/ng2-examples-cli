@@ -82,7 +82,7 @@ export class TrackList implements OnInit {
   }
 
   isSelected(track:Media): boolean {
-    
+
     if (!track || !this.currentTrack || this.currentTrack.url !== track.url) {
       return false;
     }

@@ -4,6 +4,7 @@ import { ButtonComponent } from '../../components/button/button.component';
 import { ToggleComponent } from '../../components/toggle/toggle.component';
 import { SliderComponent } from '../../components/slider/slider.component';
 import { WaveformComponent } from '../../components/waveform/waveform.component';
+import { NavComponent } from '../../components/ui-nav/nav.component';
 import { DataChannel } from '../../services/data-channel';
 import { AudioService } from '../../services/media-service';
 import { TrackList } from "../../components/track-list/track-list.component";
@@ -17,7 +18,7 @@ declare let module: any;
   templateUrl: 'ui-test.component.html',
   styleUrls: ['ui-test.component.css'],
   providers: [ FORM_PROVIDERS, AudioService ],
-  directives: [ FORM_DIRECTIVES, SliderComponent, ButtonComponent, ToggleComponent, WaveformComponent, TrackList, AudioPlayer ],
+  directives: [ FORM_DIRECTIVES, SliderComponent, ButtonComponent, ToggleComponent, WaveformComponent, TrackList, AudioPlayer, NavComponent ],
 })
 
 export class UIComponentTest implements OnInit {
@@ -42,6 +43,8 @@ export class UIComponentTest implements OnInit {
   playhead: number;
   currentTrack: any;
   audiocontrol: EventEmitter<any>;
+  currentView: string;
+
   constructor(private _el: ElementRef, 
               private _ref: ChangeDetectorRef,
               private _fb: FormBuilder,
@@ -115,6 +118,7 @@ export class UIComponentTest implements OnInit {
         y: window.innerHeight - 214 + 'px'
     };
   
+    this.currentView = 'none';
     
     
   }
@@ -188,6 +192,7 @@ export class UIComponentTest implements OnInit {
         if(message === 'open') {
           this.isConnected = true;
           this.isConnecting = false;
+          this.currentView = 'waveform';
           this.client.observer.subscribe((res)=>{
 
             let msg = res[res.length-1].data;
@@ -212,6 +217,13 @@ export class UIComponentTest implements OnInit {
       });
 
     }
+  }
+
+	onViewSelect(view: string): void {
+    
+    console.log(view);
+    this.currentView = view;
+    
   }
   
   onToggle() {
@@ -242,7 +254,7 @@ export class UIComponentTest implements OnInit {
 
     if(this.client && this.client.channel) {
       this.client.channel.send(msg);
-       this.controller.emit({
+       this.audiocontrol.emit({
           action: 'play',
           track: this.currentTrack
         });

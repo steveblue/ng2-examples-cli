@@ -45,6 +45,7 @@ export class WaveformComponent implements OnInit {
   ref: ChangeDetectorRef;
   hasRemoteConnection: boolean;
   controls: EventEmitter < any > ;
+  client: DataChannel;
 
   @Input('control') control: any; 
   @Output() path: any;
@@ -65,6 +66,7 @@ export class WaveformComponent implements OnInit {
     this.meters = [];
     this.newMeter();
     this.isVisible = false;
+    this.client =  _dataChannel;
     this.controls = new EventEmitter();
   }
 
@@ -91,12 +93,21 @@ export class WaveformComponent implements OnInit {
           this.meters[i].val = this.data[this.scale(this.meters[i].position.x, 0, window.innerWidth, 0, 1024)];
           this.meters[i].transform = 'translate(' + this.meters[i].position.x + ', 0)';
           this.meters[i].level.points[0].y = this.height - this.scale(this.meters[i].val, 0, 255, 0, this.height);
-
+          
         }
 
         this.controls.emit({
           meters: this.meters
         });
+
+       let msg = JSON.stringify({
+          currentValue: this.meters,
+          control: 'meters'
+        });
+
+        if(this.client && this.client.channel) {
+            this.client.channel.send(msg);
+          }
 
         this.ref.detectChanges();
 

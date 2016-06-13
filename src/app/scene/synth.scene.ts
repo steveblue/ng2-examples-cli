@@ -259,6 +259,8 @@ export class Synth {
  render() {
 
     let delta = this.clock.getDelta();
+
+
     
     if (this.videoInput.readyState === 4) {
       if (this.texture) this.texture.needsUpdate = true;
@@ -270,6 +272,7 @@ export class Synth {
          
     if( this.composer !== undefined ) {
       this.composer.render(delta);
+      this.setParams();
     } else {
       this.renderer.render(this.scene, this.camera);
     }
