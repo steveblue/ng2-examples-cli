@@ -32,9 +32,15 @@
     <span *ngIf="toggleOptions.isActive"> Default </span>
 </ui-toggle>
 
-<slider [options]="joyOptions.left" [ngClass]="{ 'is--hidden' : currentView !== 'controls' }"></slider>
-<slider [options]="sliderOptions" [ngClass]="{ 'is--hidden' : currentView !== 'controls' }"></slider>
-<slider [options]="joyOptions.right" [ngClass]="{ 'is--hidden' : currentView !== 'controls' }"></slider>
-
+<div [ngClass]="{ 'is--hidden' : currentView !== 'controls' }">
+    <slider [options]="joyOptions.left"></slider>
+    <slider [options]="sliderOptions"></slider>
+    <slider [options]="sliderDistortion"></slider>
+    <slider [options]="sliderMultiplier"></slider>
+    <slider [options]="sliderHue"></slider>
+    <slider [options]="sliderSaturation"></slider>
+    <slider [options]="sliderOpacity"></slider>
+    <slider [options]="joyOptions.right"></slider>
+</div>
 
 <waveform-monitor [control]="controller" [ngClass]="{ 'is--hidden' : currentView !== 'waveform' }"></waveform-monitor>

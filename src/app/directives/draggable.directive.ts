@@ -180,11 +180,11 @@ export class DraggableDirective implements OnInit {
     
 
     if (this.options.orient === 'is--hor') {
-      this.options.currentValue = 0;
+     // this.options.currentValue = 0;
     } else if (this.options.orient === 'is--vert') {
-      this.options.currentValue = 0;
+     // this.options.currentValue = 0;
     } else if (this.options.orient === 'is--joystick') {
-      this.options.currentValue = [0,0];
+     // this.options.currentValue = [0,0];
     }
     
     // TODO: set cancel flag? these value just happen to work b/c of current min and max

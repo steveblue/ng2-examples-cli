@@ -1,38 +1,32 @@
-  <header class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
+<header class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
     <h1>
       {{ copy.headline }}
     </h1>
-     <p>{{copy.line1}}</p>
-     <p>{{copy.line2}}</p>
-     <form [ngFormModel]="form">
-        <input type="text" ngControl="room" class="is--code"/>
-          <ui-button (click)="onClick($event)">
-                <span *ngIf="!isConnected && isConnecting === false"> Connect </span>
-                <span *ngIf="isConnected"> Connected </span>
-                <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
-                <div class="ui__button-notification"></div>
-          </ui-button>
-     </form>
-  </header>
+    <p>{{copy.line1}}</p>
+    <p>{{copy.line2}}</p>
+    <form [ngFormModel]="form">
+        <input type="text" ngControl="room" class="is--code" />
+        <ui-button (click)="onClick($event)">
+            <span *ngIf="!isConnected && isConnecting === false"> Connect </span>
+            <span *ngIf="isConnected"> Connected </span>
+            <div *ngIf="isConnecting" class="loading__icon is--small is--center"></div>
+            <div class="ui__button-notification"></div>
+        </ui-button>
+    </form>
+</header>
 
-<div class="music__player">
-  
-    <audio-player
-      [url]="currentTrack.url"
-      [control]="controller"
-      (onended)="nextTrack()">
+<div class="music__player" [ngClass]="{ 'is--hidden' : hideControls === true }">
+
+    <audio-player [url]="currentTrack.url" [control]="controller" (onended)="nextTrack()">
     </audio-player>
-    
-    <track-list
-      [trackList]="tracks"
-      [control]="controller"
-      (onselect)="onTrackSelected($event)">
+
+    <track-list [trackList]="tracks" [control]="controller" (onselect)="onTrackSelected($event)">
     </track-list>
 
 
 
-  </div>
+</div>
 
 
-  <div class="scene"></div>
-  <video autoplay ></video>
+<div class="scene"></div>
+<video autoplay></video>

@@ -6,7 +6,10 @@ export class Meter {
   val: number;
   index: number;
   tooltip: any;
+  control: string;
   constructor(private height: number, private i: number) {
+
+    this.control = ''; // TODO: map parameter value
 
     this.position = {
         x: 0,

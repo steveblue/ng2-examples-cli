@@ -38,6 +38,7 @@ export class SynthComponent implements OnInit {
   playhead: number;
   controller: EventEmitter<any>;
   currentTrack: any;
+  hideControls: boolean;
   
   constructor(private _ref: ChangeDetectorRef,
               private _el: ElementRef,
@@ -52,6 +53,7 @@ export class SynthComponent implements OnInit {
     this.isConnecting = false;
     this.isButtonDisabled = true;
     this.toggleInvert = 1;
+    this.hideControls = false;
 
     // audio 
 
@@ -59,8 +61,9 @@ export class SynthComponent implements OnInit {
     this.currentTrack = {};
     
     this.controller = new EventEmitter();
+    
 
-    audioService.get().subscribe(res => {
+    this.audioService.get().subscribe(res => {
       this.tracks = res;
       this.currentTrack = this.tracks[this.playhead];
     });
@@ -116,13 +119,26 @@ export class SynthComponent implements OnInit {
     this.world.update();
     
     this.form.valueChanges.subscribe((val) => {
-         console.log(JSON.stringify(val));
+         //console.log(JSON.stringify(val));
          if(val.room.length === 5) {
            this.isButtonDisabled = false;
          } else {
            this.isButtonDisabled = true;
          }
     });
+
+    window.addEventListener('keydown', (ev) => {
+      if(ev.keyCode === 72 && ev.shiftKey === true) {
+        console.log('hide');
+        this.hideControls = true;
+      }
+      if(ev.keyCode === 72 && ev.shiftKey === true && ev.ctrlKey === true) {
+        console.log('show');
+        this.hideControls = false;
+      }
+      this.ref.detectChanges();
+  
+    })
     
   }
   onTrackSelected(track: Media): void {
@@ -227,24 +243,58 @@ export class SynthComponent implements OnInit {
     if(msg.control === 'joyRight') {
        // this.world.controls.mouseX = data[0];
        // this.world.controls.mouseY = data[1];
+       this.world.mesh.rotation.x = (Math.PI / data[0]) * 10.0;
+       this.world.mesh.rotation.z = (Math.PI / data[1]) * 10.0;
     }
     
     if(msg.control === 'slider') {
       
-      this.world.multiply = msg.currentValue * this.toggleInvert;
-      
-    }
-    
-   if(msg.control === 'toggle') {
-      
-     this.toggleInvert = this.toggleInvert === 1 ? -1 : 1;
+      this.world.originZ = msg.currentValue * this.toggleInvert;
       
     }
 
-    if(msg.control === 'meters') {
-      msg.currentValue.forEach(function(meter){
-        console.log(meter.val);
-      });
+        
+    if(msg.control === 'distortion') {
+      
+      this.world.displacement = msg.currentValue;
+      
+    }
+
+            
+    if(msg.control === 'multiplier') {
+      
+     // this.world.multiply = msg.currentValue;
+      
+    }
+
+    if(msg.control === 'hue') {
+      
+      this.world.hue = msg.currentValue;
+      
+    }
+
+    if(msg.control === 'saturation') {
+      
+      this.world.saturation = msg.currentValue;
+      
+    }
+
+
+    if(msg.control === 'opacity') {
+      
+      this.world.opacity = msg.currentValue;
+      
+    }
+    
+    
+   if(msg.control === 'toggle') {
+      
+     this.toggleInvert = this.toggleInvert === 1.0 ? -1.0 : 1.0;
+      
+    }
+
+    if(msg.control === 'meter') {
+      this.world.displacement = (this.audioService.getFrequency(msg.currentValue) / 255) * 100.0 * this.toggleInvert;
     }
     
     this.messages.push(msg);

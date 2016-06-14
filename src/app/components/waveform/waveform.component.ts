@@ -90,24 +90,27 @@ export class WaveformComponent implements OnInit {
 
         for (let i = 0; i < this.meters.length; i++) {
 
-          this.meters[i].val = this.data[this.scale(this.meters[i].position.x, 0, window.innerWidth, 0, 1024)];
+          this.meters[i].index = this.scale(this.meters[i].position.x, 0, window.innerWidth, 0, 1024);
+          this.meters[i].val = this.data[this.meters[i].index];
           this.meters[i].transform = 'translate(' + this.meters[i].position.x + ', 0)';
           this.meters[i].level.points[0].y = this.height - this.scale(this.meters[i].val, 0, 255, 0, this.height);
           
+          let msg = JSON.stringify({
+            currentValue: this.meters[i].index,
+            control: 'meter'
+          });
+
+          if(this.client && this.client.channel) {
+              this.client.channel.send(msg);
+          }
+
         }
 
         this.controls.emit({
           meters: this.meters
         });
 
-       let msg = JSON.stringify({
-          currentValue: this.meters,
-          control: 'meters'
-        });
-
-        if(this.client && this.client.channel) {
-            this.client.channel.send(msg);
-          }
+ 
 
         this.ref.detectChanges();
 
@@ -153,9 +156,18 @@ export class WaveformComponent implements OnInit {
   onMouseMove(ev) {
 
     if (this.selected !== 1000) {
-      this.meters[this.selected].position.x = ev.clientX;
+
+      this.meters[this.selected].position.x = ev.layerX || ev.clientX;
+      console.log( this.meters[this.selected].position.x );
       //this.ref.detectChanges();
     }
+
+  }
+
+  onTouchStart(ev) {
+
+   //ev.preventDefault();
+   this.selected = 0;
 
   }
   onMouseLeave(ev) {
@@ -185,6 +197,7 @@ export class WaveformComponent implements OnInit {
       this.isVisible = true;
       this.init = true;
     } else {
+      //TODO: add paremeter value
       this.meters.push(new Meter(this.height, this.meters.length));
       this.selected = this.meters.length - 1;
     }

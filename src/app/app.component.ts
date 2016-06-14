@@ -24,7 +24,7 @@ declare let module: any;
 @Component({
   selector: 'app',
   template:`
-    <global-nav></global-nav>
+   <!-- <global-nav></global-nav> -->
     <div class="outer-outlet">
       <router-outlet></router-outlet>
     </div>

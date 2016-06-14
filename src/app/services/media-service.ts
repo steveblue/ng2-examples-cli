@@ -27,6 +27,7 @@ export class AudioService {
   processor: ScriptProcessorNode;
   sourceNode: MediaElementAudioSourceNode;
   freqData: Uint8Array;
+  freq: number[];
 
   constructor(public http: Http, 
               private _dataChannel: DataChannel,
@@ -117,11 +118,20 @@ export class AudioService {
 
   }
 
-  setFrequencyData(data) {
-    emitter.next(data);
+  getFrequencyData() {
+    return this.freq;
+  }
+
+  getFrequency(i:number) {
+    return this.freq[i];
+  }
+
+  setFrequencyData(data:number[]) {
+    this.freq = data;
+    emitter.next(this.freq);
     if(this.client && this.client.isOpen) {
       let msg = JSON.stringify({
-        currentValue: data,
+        currentValue: this.freq,
         control: 'waveform'
       });
       this.client.channel.send(msg);

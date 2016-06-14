@@ -25,6 +25,11 @@ export class UIComponentTest implements OnInit {
   
   copy: any;
   sliderOptions: any;
+  sliderDistortion: any;
+  sliderMultiplier: any;
+  sliderHue: any;
+  sliderSaturation: any;
+  sliderOpacity: any;
   joyOptions: any;
   buttonOptions: any;
   toggleOptions: any;
@@ -109,16 +114,81 @@ export class UIComponentTest implements OnInit {
     
     this.sliderOptions = {
         orient: 'is--vert',
-        min: 12.0,
-        max: -12.0,
+        min: -1000.0,
+        max: 1000.0,
         currentValue: 0,
         onUpdate: new EventEmitter(),
         position: 'absolute',
         x: (14*2) + 200 + 'px',
         y: window.innerHeight - 214 + 'px'
     };
+
+    this.sliderDistortion = {
+        orient: 'is--vert',
+        min: -10.0,
+        max: 10.0,
+        currentValue: 0,
+        onUpdate: new EventEmitter(),
+        position: 'absolute',
+        x: (14*2) + 250 + 'px',
+        y: window.innerHeight - 214 + 'px'
+    };
+
+
+    this.sliderMultiplier = {
+        orient: 'is--vert',
+        min: 0.0,
+        max: 100.0,
+        currentValue: 0,
+        onUpdate: new EventEmitter(),
+        position: 'absolute',
+        x: (14*2) + 300 + 'px',
+        y: window.innerHeight - 214 + 'px'
+    };
+
+
+    this.sliderHue = {
+        orient: 'is--vert',
+        min: 0,
+        max: 1.0,
+        currentValue: 0,
+        onUpdate: new EventEmitter(),
+        position: 'absolute',
+        x: (14*2) + 350 + 'px',
+        y: window.innerHeight - 214 + 'px'
+    };
+
+    this.sliderSaturation = {
+        orient: 'is--vert',
+        min: 0,
+        max: 1.0,
+        currentValue: 0,
+        onUpdate: new EventEmitter(),
+        position: 'absolute',
+        x: (14*2) + 400 + 'px',
+        y: window.innerHeight - 214 + 'px'
+    };
+
+
+    this.sliderOpacity = {
+        orient: 'is--vert',
+        min: 1.0,
+        max: 0.0,
+        currentValue: 0,
+        onUpdate: new EventEmitter(),
+        position: 'absolute',
+        x: (14*2) + 450 + 'px',
+        y: window.innerHeight - 214 + 'px'
+    };
   
-    this.currentView = 'none';
+  
+  
+  
+    this.currentView = 'controls';
+
+    window.addEventListener('touchstart', function(ev){
+      //ev.preventDefault();
+    });
     
     
   }
@@ -174,6 +244,70 @@ export class UIComponentTest implements OnInit {
          this.client.channel.send(msg);
       }
      });
+
+    this.sliderDistortion.onUpdate.subscribe((val) => {
+      let msg = JSON.stringify({
+        currentValue: this.sliderDistortion.currentValue,
+        max: this.sliderDistortion.max,
+        min: this.sliderDistortion.min,
+        control: 'distortion'
+      });
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+     });
+
+    this.sliderMultiplier.onUpdate.subscribe((val) => {
+      let msg = JSON.stringify({
+        currentValue: this.sliderMultiplier.currentValue,
+        max: this.sliderMultiplier.max,
+        min: this.sliderMultiplier.min,
+        control: 'multiplier'
+      });
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+     });
+
+
+
+    this.sliderHue.onUpdate.subscribe((val) => {
+      let msg = JSON.stringify({
+        currentValue: this.sliderHue.currentValue,
+        max: this.sliderHue.max,
+        min: this.sliderHue.min,
+        control: 'hue'
+      });
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+     });
+
+
+    this.sliderSaturation.onUpdate.subscribe((val) => {
+      let msg = JSON.stringify({
+        currentValue: this.sliderSaturation.currentValue,
+        max: this.sliderSaturation.max,
+        min: this.sliderSaturation.min,
+        control: 'saturation'
+      });
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+     });
+
+    this.sliderOpacity.onUpdate.subscribe((val) => {
+      let msg = JSON.stringify({
+        currentValue: this.sliderOpacity.currentValue,
+        max: this.sliderOpacity.max,
+        min: this.sliderOpacity.min,
+        control: 'opacity'
+      });
+      if(this.client && this.client.channel) {
+         this.client.channel.send(msg);
+      }
+     });
+
   }
   onClick() {
  
@@ -187,12 +321,12 @@ export class UIComponentTest implements OnInit {
 
       
       this.client.emitter.subscribe((message)=>{
-        console.log('hello!', message);
+       // console.log('hello!', message);
            
         if(message === 'open') {
           this.isConnected = true;
           this.isConnecting = false;
-          this.currentView = 'waveform';
+          this.currentView = 'controls';
           this.client.observer.subscribe((res)=>{
 
             let msg = res[res.length-1].data;

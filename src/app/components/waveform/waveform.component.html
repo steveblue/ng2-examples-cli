@@ -1,7 +1,4 @@
-
-<svg [attr.width]="width"
-      [attr.height]="44"
-      (click)="addMeter($event)">
+<svg [attr.width]="width" [attr.height]="44" (click)="addMeter($event)">
 
    <g class="control__group">
       <line [attr.x1]="0"
@@ -20,10 +17,7 @@
 
  </svg>
 
- <svg [attr.width]="width"
-      [attr.height]="height"
-      (mousemove)="onMouseMove($event)"
-      (mouseleave)="onMouseLeave($event)">
+<svg [attr.width]="width" [attr.height]="height" (touchstart)="onTouchStart($event)" (touchmove)="onMouseMove($event)" (mousemove)="onMouseMove($event)" (touchend)="onMouseLeave($event)" (touchcancel)="onMouseLeave($event)" (mouseleave)="onMouseLeave($event)">
    <path class="levels"
          [attr.d]="path"
          [attr.fill]="color">
