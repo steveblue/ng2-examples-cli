@@ -7,6 +7,8 @@
   height: 100%;
   padding: 0;
   margin: 0;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
 }
 
 .scene {
@@ -35,12 +37,13 @@ video {
 
 .copy {
   position: absolute;
+  display:block;
   top: 33%;
   left: 50%;
   z-index: 500;
-  transform: translateX(-50%) translateY(-50%);
   webkit-font-smoothing: antialiased;
   backface-visibility: hidden;
+  transform-origin: 50% 50%;
  &.is--hidden {
     display: none;
   }

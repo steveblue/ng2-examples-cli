@@ -1,25 +1,26 @@
 <!doctype html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <title>Synth</title>
-  <base href="/">
-  {{content-for 'head'}}
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="style/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>
-      // See http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
-      (function(){
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect != location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
+    <meta charset="utf-8">
+    <title>Synth</title>
+    <base href="/"> {{content-for 'head'}}
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.rawgit.com/web-animations/web-animations-js/master/web-animations.min.js"></script>
+    <script>
+        // See http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
+        (function() {
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        })();
     </script>
 
-  <!-- Service worker support is disabled by default.
+    <!-- Service worker support is disabled by default.
        Install the worker script and uncomment to enable.
        Only enable service workers in production.
   <script type="text/javascript">
@@ -30,31 +31,31 @@
     }
   </script>
   -->
- 
+
 </head>
+
 <body>
-  
-  <app>
-    <div class="loading__icon is--large is--center"></div>
-  </app>
-  <script src="vendor/three/build/three.js"></script>
-  <script src="vendor/es6-shim/es6-shim.js"></script>
-  <script src="vendor/reflect-metadata/Reflect.js"></script>
-  <script src="vendor/systemjs/dist/system.src.js"></script>
-  <script src="vendor/zone.js/dist/zone.js"></script>
 
-  <script>
-    Promise.all([
-      System.import('vendor/d3/d3.js'),
-      System.import('vendor/firebase/lib/firebase-web.js'),
-      System.import('lib/TerrainLoader.js'),
-      System.import('lib/FirstPersonControls.js'),
-      System.import('system-config.js').then(function () {
-        System.import('main');
-      }).catch(console.error.bind(console))
-    ]);
+    <app>
+        <div class="loading__icon is--large is--center"></div>
+    </app>
+    <script src="vendor/three/build/three.js"></script>
+    <script src="vendor/es6-shim/es6-shim.js"></script>
+    <script src="vendor/reflect-metadata/Reflect.js"></script>
+    <script src="vendor/systemjs/dist/system.src.js"></script>
+    <script src="vendor/zone.js/dist/zone.js"></script>
 
-
-  </script>
+    <script>
+        Promise.all([
+            System.import('vendor/d3/d3.js'),
+            System.import('vendor/firebase/lib/firebase-web.js'),
+            System.import('lib/TerrainLoader.js'),
+            System.import('lib/FirstPersonControls.js'),
+            System.import('system-config.js').then(function() {
+                System.import('main');
+            }).catch(console.error.bind(console))
+        ]);
+    </script>
 </body>
+
 </html>

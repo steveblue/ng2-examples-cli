@@ -1,5 +1,4 @@
-
-<header class="copy" [ngClass]="{ 'is--hidden' : isConnected === true }">
+<header class="copy" @intro="headerState">
     <h1>
     {{ copy.headline }}
 </h1>
@@ -31,4 +30,3 @@
 
 <div class="scene"></div>
 <video autoplay></video>
-
