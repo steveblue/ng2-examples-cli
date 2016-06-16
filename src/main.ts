@@ -2,7 +2,7 @@ import { bootstrap } from '@angular/platform-browser-dynamic';
 import { enableProdMode, provide } from '@angular/core';
 import { HTTP_PROVIDERS } from '@angular/http';
 import { ROUTER_PROVIDERS } from '@angular/router';
-import { FORM_PROVIDERS } from '@angular/common';
+import { FORM_PROVIDERS, CORE_DIRECTIVES } from '@angular/common';
 import { AppComponent, environment } from './app/';
 
 import { DataChannel } from './app/services/data-channel';
@@ -18,7 +18,8 @@ bootstrap(AppComponent, [
   provide('audioContext', {useValue: new (window['AudioContext'] || window['webkitAudioContext'])}),
   ROUTER_PROVIDERS,
   HTTP_PROVIDERS,
-  FORM_PROVIDERS
+  FORM_PROVIDERS,
+  CORE_DIRECTIVES
   //provide(LocationStrategy, { useClass : HashLocationStrategy })
 ]);
 

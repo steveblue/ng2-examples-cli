@@ -318,7 +318,10 @@ export class DraggableDirective implements OnInit {
     this.rect = this.elem.getBoundingClientRect(); //TODO: use Ruler Service instead.
 
     if (this.options.orient === 'is--joystick') {
-      this.options.pos.emit(['50%', '50%', '1px']);
+      
+      // Maximum call stack size ERROR
+      // this.options.pos.emit(['50%', '50%', '1px']); 
+
     }
     
     //TODO init based on this.options.currentValue

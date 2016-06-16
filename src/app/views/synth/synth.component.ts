@@ -1,4 +1,4 @@
-import { Component, provide, ChangeDetectorRef, ElementRef, OnInit, EventEmitter } from '@angular/core';
+import { Component, provide, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { NgClass, Control, ControlGroup, FormBuilder, FORM_PROVIDERS, FORM_DIRECTIVES } from '@angular/common';
 import { DataChannel } from '../../services/data-channel';
 import { Synth } from '../../scene/synth.scene';
@@ -9,6 +9,9 @@ import { AudioPlayer } from "../../components/audio-player/audio-player.componen
 import { AudioService } from '../../services/media-service';
 
 declare let module: any;
+
+
+let keydownListener;
 
 @Component({
   selector: 'view',
@@ -88,6 +91,7 @@ export class SynthComponent implements OnInit {
     this.onSubscribe();
 
   }
+
   ngOnInit() {
 
     // TODO: internalize all arguments 
@@ -127,20 +131,30 @@ export class SynthComponent implements OnInit {
          }
     });
 
-    window.addEventListener('keydown', (ev) => {
-      if(ev.keyCode === 72 && ev.shiftKey === true) {
-        console.log('hide');
-        this.hideControls = true;
-      }
-      if(ev.keyCode === 72 && ev.shiftKey === true && ev.ctrlKey === true) {
-        console.log('show');
-        this.hideControls = false;
-      }
-      this.ref.detectChanges();
-  
-    })
-    
+    window.addEventListener('keydown', this.onKeyDown.bind(this));
+
+
   }
+
+  ngOnDestroy() {
+    window.removeEventListener('keydown', this.onKeyDown.bind(this));
+  }
+
+  onKeyDown(ev) {
+
+    if(ev.keyCode === 72 && ev.shiftKey === true) {
+      console.log('hide');
+      this.hideControls = true;
+    }
+    if(ev.keyCode === 72 && ev.shiftKey === true && ev.ctrlKey === true) {
+      console.log('show');
+      this.hideControls = false;
+    }
+
+    this.ref.detectChanges();
+
+  }
+
   onTrackSelected(track: Media): void {
     
     this.playhead = this.tracks.indexOf(track);
@@ -152,6 +166,7 @@ export class SynthComponent implements OnInit {
     });
     
   }
+
   prevTrack() {
     
     this.playhead = this.tracks.indexOf(this.currentTrack);
