@@ -4,7 +4,11 @@
     "name": "synth"
   },
   "apps": [
-    {"main": "src/main.ts", "tsconfig": "src/tsconfig.json"}
+    {
+      "main": "src/main.ts", 
+      "tsconfig": "src/tsconfig.json",
+      "mobile": false
+    }
   ],
   "addons": [],
   "packages": [],
@@ -19,8 +23,10 @@
     }
   },
   "defaults": {
-    "prefix": "",
+    "prefix": "app",
     "sourceDir": "src",
-    "styleExt": "scss"
+    "styleExt": "scss",
+    "prefixInterfaces": false,
+    "lazyRoutePrefix": "+"
   }
 }

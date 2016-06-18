@@ -4,33 +4,11 @@
 <head>
     <meta charset="utf-8">
     <title>Synth</title>
-    <base href="/"> {{content-for 'head'}}
+    <base href="/">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.rawgit.com/web-animations/web-animations-js/master/web-animations.min.js"></script>
-    <script>
-        // See http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
-        (function() {
-            var redirect = sessionStorage.redirect;
-            delete sessionStorage.redirect;
-            if (redirect && redirect != location.href) {
-                history.replaceState(null, null, redirect);
-            }
-        })();
-    </script>
-
-    <!-- Service worker support is disabled by default.
-       Install the worker script and uncomment to enable.
-       Only enable service workers in production.
-  <script type="text/javascript">
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/worker.js').catch(function(err) {
-        console.log('Error installing service worker: ', err);
-      });
-    }
-  </script>
-  -->
 
 </head>
 
