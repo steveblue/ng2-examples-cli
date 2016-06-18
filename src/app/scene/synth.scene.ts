@@ -5,6 +5,7 @@ declare let System: any;
 declare let navigator: any;
 
 export class Synth {
+  delta: number;
   clock: any;
   control: any; // TODO: expecting in constructor
   cam: any; // TODO: expecting in constructor
@@ -258,9 +259,7 @@ export class Synth {
   
  render() {
 
-    let delta = this.clock.getDelta();
-
-
+    this.delta = this.clock.getDelta();
     
     if (this.videoInput.readyState === 4) {
       if (this.texture) this.texture.needsUpdate = true;
@@ -271,7 +270,7 @@ export class Synth {
 
          
     if( this.composer !== undefined ) {
-      this.composer.render(delta);
+      this.composer.render(this.delta);
       this.setParams();
     } else {
       this.renderer.render(this.scene, this.camera);

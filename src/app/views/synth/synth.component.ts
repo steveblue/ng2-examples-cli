@@ -251,9 +251,12 @@ export class SynthComponent implements OnInit {
 
   }
 
-  updateMessages(msg: any) {
+  updateMessages(msg: any, delta: number) {
 
     let data: number[] = msg.currentValue;
+
+    let actualMoveSpeed = delta * 1.0;
+
 
     if (msg.control === 'player') {
 
@@ -276,7 +279,8 @@ export class SynthComponent implements OnInit {
     if (msg.control === 'joyLeft') {
       if (data[0] < 0) {
         console.log('left');
-        this.world.camera.position.x--;
+        this.world.camera.position.x --;
+        //this.world.camera.translateX( - actualMoveSpeed * 1.0 + this.world.camera.position.x );
         //this.world.controls.moveLeft = true;
         //this.world.controls.moveRight = false;
 
@@ -286,7 +290,8 @@ export class SynthComponent implements OnInit {
 
       if (data[0] > 0) {
         console.log('right');
-        this.world.camera.position.x++;
+        this.world.camera.position.x ++;
+        //this.world.camera.translateX( actualMoveSpeed * 1.0 + this.world.camera.position.x);
         //this.world.controls.moveLeft = false;
         //this.world.controls.moveRight = true;
       } else {
@@ -296,7 +301,8 @@ export class SynthComponent implements OnInit {
 
       if (data[1] > 0) {
         console.log('forward');
-        this.world.camera.position.z++;
+        this.world.camera.position.z ++;
+        //this.world.camera.translateZ( - ( actualMoveSpeed * 1.0 + this.world.camera.position.z ) );
         //this.world.controls.moveForward = true;
         //this.world.controls.moveBackward = false;
       } else {
@@ -304,10 +310,12 @@ export class SynthComponent implements OnInit {
       }
 
       if (data[1] < 0) {
-        this.world.camera.position.z--;
+        
         console.log('backward');
-        // this.world.controls.moveBackward = true;
-        // this.world.controls.moveForward = false;
+        this.world.camera.position.z --;
+        //this.world.camera.translateZ( actualMoveSpeed * 1.0 + this.world.camera.position.z );
+        //this.world.controls.moveBackward = true;
+        //this.world.controls.moveForward = false;
       } else {
         //this.world.controls.moveBackward = false;
       }
@@ -317,8 +325,8 @@ export class SynthComponent implements OnInit {
     if (msg.control === 'joyRight') {
       // this.world.controls.mouseX = data[0];
       // this.world.controls.mouseY = data[1];
-      this.world.mesh.rotation.x = (Math.PI / data[0]) * 10.0;
-      this.world.mesh.rotation.z = (Math.PI / data[1]) * 10.0;
+      this.world.mesh.rotation.x = (Math.PI / data[0]) * 8.0;
+      this.world.mesh.rotation.z = (Math.PI / data[1]) * 8.0;
     }
 
     if (msg.control === 'slider') {
@@ -408,7 +416,7 @@ export class SynthComponent implements OnInit {
         this.client.observer.subscribe((res) => {
 
           let msg = res[res.length - 1].data;
-          this.updateMessages(msg);
+          this.updateMessages(msg, this.world.delta);
 
         });
 

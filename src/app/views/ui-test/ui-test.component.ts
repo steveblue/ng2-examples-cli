@@ -186,10 +186,11 @@ export class UIComponentTest implements OnInit {
   
     this.currentView = 'controls';
 
-    window.addEventListener('touchstart', function(ev){
-      //ev.preventDefault();
-    });
-    
+    document.ontouchmove = function(e){ 
+        e.preventDefault(); 
+    };
+
+ 
     
   }
   ngOnInit() {

@@ -16,13 +16,13 @@ let uuid = function() {
 let defaultRoom = function() {
 
     let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let possible = "ABCDEFGHJKMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
 
     for( let i=0; i < 5; i++ ) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
 
-    return text;
+    return text.charAt(0).toUpperCase() + text.slice(1);
 
 };
 
@@ -305,7 +305,7 @@ export class DataChannel {
       createdAt: new Date()
     });
     
-    console.log(JSON.parse(ev.data));
+    //console.log(JSON.parse(ev.data));
   
     this.channelObserver.next(this.store.messages);
     if(this.debug) console.log('Received Message: ' + ev.data);
@@ -317,7 +317,7 @@ export class DataChannel {
     var msg = snapshot.val();
     var sender = msg.sender;
     var type = msg.type;
-    console.log(msg);
+    //console.log(msg);
     if( sender === this.remotePeer ) {
       if(this.debug) console.log('Received a \'' + type + '\' signal from ' + sender + ' of type ' + type);
       if(type == 'message') {
